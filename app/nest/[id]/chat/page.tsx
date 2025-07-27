@@ -40,9 +40,10 @@ export default function NestChatPage() {
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [socket, setSocket] = useState<Socket | null>(null);
-
   // Fetch the current nest's details from Supabase
   const [nestDetails, setNestDetails] = useState<Database['public']['Tables']['nests']['Row']|null>(null);
+  // State for nest members
+  const [nestMembers, setNestMembers] = useState<Database['public']['Tables']['users']['Row'][]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -57,6 +58,7 @@ export default function NestChatPage() {
 
     fetchMessages();
     fetchNestDetails();
+
 
     const socket = setupSocketConnection();
     setSocket(socket);
@@ -160,15 +162,33 @@ export default function NestChatPage() {
 
     const fetchNestDetails = async () => {
       if (!nestId) return;
+      // Fetch nest details and members in one query
       const { data, error } = await supabase
         .from('nests')
-        .select('*')
+        .select(`
+          *,
+          nest_members: nest_members (
+            id,
+            user_id,
+            role,
+            joined_at,
+            user: users (
+              id,
+              name,
+              username,
+              aura_level,
+              avatar_url
+            )
+          )
+        `)
         .eq('id', nestId)
         .single();
+
       if (error) {
         console.error('Error fetching nest details:', error);
         setNestDetails(null);
       } else {
+        console.log('',data)
         setNestDetails(data);
       }
     };
@@ -195,7 +215,7 @@ export default function NestChatPage() {
         socket.emit('send_message', messageData);
       }
 
-    /*  
+    /* 
       const { error } = await supabase
         .from('messages')
         .insert(messageData);
@@ -383,7 +403,7 @@ export default function NestChatPage() {
                       <Reply className="w-3 h-3" />
                     </button>
                     
-                    {/* Reactions (visible to all for now, in real app would be moderator-only) */}
+                    {/* Reactions  */}
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => handleReaction(message.id, 'upvote')}

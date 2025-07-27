@@ -6,8 +6,8 @@ import { Navbar } from '@/components/layout/navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'HueNest - Your Safe Space for Better Mental Health',
-  description: 'HueNest is your safe space for better mental health, self-expression, and genuine vibes. Connect with university students in wellness-focused group chats.',
+  title: 'HealNest - Your Safe Space for Better Mental Health',
+  description: 'HealNest is your safe space for better mental health, self-expression, and genuine vibes. Connect with university students in wellness-focused group chats.',
   keywords: 'mental health, university students, wellness, safe space, group chat, gen z',
 };
 

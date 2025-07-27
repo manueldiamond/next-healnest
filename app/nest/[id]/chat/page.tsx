@@ -6,8 +6,9 @@ import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, EyeOff, Eye, MoreVertical
 import { HueButton } from '@/components/ui/hue-button';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/lib/store';
-import { supabase } from '@/lib/supabase';
+import { Database, supabase } from '@/lib/supabase';
 import { generateAnonymousName } from '@/lib/utils/anonymous-names';
+import { io, Socket } from 'socket.io-client';
 
 interface Message {
   id: string;
@@ -38,15 +39,95 @@ export default function NestChatPage() {
   const [replyingTo, setReplyingTo] = useState<Message | null>(null);
   const [loading, setLoading] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  // Fetch the current nest's details from Supabase
+  const [nestDetails, setNestDetails] = useState<Database['public']['Tables']['nests']['Row']|null>(null);
 
   useEffect(() => {
     if (!user) {
       router.push('/auth');
       return;
     }
+
+    if (!user || !nestId) {
+      console.warn('[setupSocketConnection] No user or nestId, aborting socket setup.', { user, nestId });
+      return;
+    }
+
     fetchMessages();
-    setupRealtimeSubscription();
-  }, [nestId, user, router]);
+    fetchNestDetails();
+
+    const socket = setupSocketConnection();
+    setSocket(socket);
+
+    // Cleanup function
+    return () => {
+      console.log('[setupSocketConnection] Cleanup function called.');
+      if (socket) {
+        console.log('[setupSocketConnection] Emitting leave_nest event before disconnect:', { nest_id: nestId });
+        socket.emit('leave_nest', { nest_id: nestId });
+        socket.disconnect();
+        console.log('[setupSocketConnection] Socket disconnected and cleaned up.');
+      }
+    };
+ 
+  }, [nestId]);
+
+
+  const setupSocketConnection = () => {
+    const socketUrl = process.env.NODE_ENV === 'development'
+      ? 'http://localhost:4000'
+      : process.env.NEXT_PUBLIC_SOCKET_URL;
+    console.log('[setupSocketConnection] Connecting to Socket.IO server at:', socketUrl);
+
+    const newSocket =io(socketUrl, {
+      transports: ['websocket'],
+    });
+    
+    newSocket.on('connect', () => {
+      console.log('[Socket.IO] Connected to server. Socket ID:', newSocket.id);
+      // Join the nest room
+      console.log('[Socket.IO] Emitting join_nest event:', { nest_id: nestId, user_id: user?.id });
+      newSocket.emit('join_nest', { nest_id: nestId, user_id: user?.id });
+    });
+
+    newSocket.on('new_message', (message: Message) => {
+      console.log('[Socket.IO] Received new_message event:', message);
+      setMessages(prev => {
+        const updated = [...prev, message];
+        console.log('[Socket.IO] Updated messages state after new_message:', updated);
+        return updated;
+      });
+    });
+
+    newSocket.on('message_reaction_updated', ({ message_id, upvotes, downvotes }) => {
+      console.log('[Socket.IO] Received message_reaction_updated event:', { message_id, upvotes, downvotes });
+      setMessages(prev => {
+        const updated = prev.map(msg =>
+          msg.id === message_id
+            ? { ...msg, upvotes, downvotes }
+            : msg
+        );
+        console.log('[Socket.IO] Updated messages state after message_reaction_updated:', updated);
+        return updated;
+      });
+    });
+
+    newSocket.on('user_joined', ({ user_id, nest_id }) => {
+      console.log(`[Socket.IO] user_joined event: User ${user_id} joined nest ${nest_id}`);
+    });
+
+    newSocket.on('error', ({ message }) => {
+      console.error('[Socket.IO] Error event received:', message);
+    });
+
+    newSocket.on('disconnect', (reason) => {
+      console.log('[Socket.IO] Disconnected from server. Reason:', reason);
+    });
+
+    return newSocket
+ };
 
   useEffect(() => {
     scrollToBottom();
@@ -77,33 +158,28 @@ export default function NestChatPage() {
     }
   };
 
-  const setupRealtimeSubscription = () => {
-    const channel = supabase
-      .channel(`nest-${nestId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `nest_id=eq.${nestId}`,
-        },
-        (payload) => {
-          // Fetch the complete message with user data
-          fetchMessages();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
+    const fetchNestDetails = async () => {
+      if (!nestId) return;
+      const { data, error } = await supabase
+        .from('nests')
+        .select('*')
+        .eq('id', nestId)
+        .single();
+      if (error) {
+        console.error('Error fetching nest details:', error);
+        setNestDetails(null);
+      } else {
+        setNestDetails(data);
+      }
     };
-  };
+
+
 
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMessage.trim() || !user) return;
 
+    console.log('SENDING'+newMessage)
     try {
       const messageData = {
         nest_id: nestId,
@@ -114,12 +190,19 @@ export default function NestChatPage() {
         anonymous_name: isAnonymous ? generateAnonymousName() : null,
       };
 
+      // Emit Socket.IO event for real-time messaging
+      if (socket) {
+        socket.emit('send_message', messageData);
+      }
+
+    /*  
       const { error } = await supabase
         .from('messages')
         .insert(messageData);
 
       if (error) throw error;
-
+    */  
+      
       // Award aura points for sending a message
       if (userProfile) {
         const newPoints = userProfile.aura_points + 5;
@@ -140,6 +223,15 @@ export default function NestChatPage() {
     if (!user) return;
 
     try {
+      // Emit Socket.IO event for real-time reaction updates
+      if (socket) {
+        socket.emit('react_to_message', {
+          message_id: messageId,
+          user_id: user.id,
+          reaction_type: type,
+        });
+      }
+
       // Check if user already reacted
       const { data: existingReaction } = await supabase
         .from('message_reactions')
@@ -215,7 +307,7 @@ export default function NestChatPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto flex flex-col h-full bg-gradient-to-b from-white to-accent-blue/5">
+    <div className="max-w-md mx-auto flex flex-col w-full h-full bg-gradient-to-b from-white to-accent-blue/5">
       {/* Header */}
       <div className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-white/20">
         <div className="flex items-center space-x-3">
@@ -223,7 +315,7 @@ export default function NestChatPage() {
             <ArrowLeft className="w-5 h-5" />
           </HueButton>
           <div>
-            <h1 className="font-semibold text-primary">Nest Chat</h1>
+            <h1 className="font-semibold text-primary">{nestDetails?.name} Chat</h1>
             <p className="text-xs text-muted-foreground">{messages.length} messages</p>
           </div>
         </div>
@@ -239,7 +331,7 @@ export default function NestChatPage() {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
+        {messages.map((message,index) => (
           <div key={message.id} className="space-y-2">
             {/* Reply Reference */}
             {message.reply_to && (
@@ -259,7 +351,7 @@ export default function NestChatPage() {
                   : 'bg-white border border-white/30'
               } rounded-2xl p-3 space-y-2`}>
                 {/* Sender Info */}
-                {message.user_id !== user?.id && (
+                {message.user_id !== user?.id && (index === 0 || messages[index - 1].user_id !== message.user_id) && (
                   <div className="flex items-center space-x-2">
                     <span className="font-medium text-sm text-primary">
                       {getDisplayName(message)}

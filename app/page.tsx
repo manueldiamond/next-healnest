@@ -60,7 +60,7 @@ export default function LandingPage() {
           {/* Heading */}
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-primary tracking-tight">
-              Hue<span className="text-accent-blue">Nest</span>
+              Heal<span className="text-accent-blue">Nest</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
               Your safe space for better mental health, self-expression, and genuine vibes.
@@ -86,7 +86,7 @@ export default function LandingPage() {
       <section className="px-4 pb-16">
         <div className="max-w-md mx-auto space-y-6">
           <h2 className="text-2xl font-bold text-center text-primary mb-8">
-            Why HueNest?
+            Why HealNest?
           </h2>
           
           <div className="grid grid-cols-1 gap-4">

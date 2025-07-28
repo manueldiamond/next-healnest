@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, EyeOff, Eye, MoreVertical } from 'lucide-react';
+import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, EyeOff, Eye, MoreVertical, Users } from 'lucide-react';
 import { HueButton } from '@/components/ui/hue-button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -15,6 +15,7 @@ interface Message {
   id: string;
   content: string;
   user_id: string;
+  nest_id: string;
   is_anonymous: boolean;
   anonymous_name: string | null;
   reply_to_id: string | null;
@@ -29,6 +30,75 @@ interface Message {
   };
   reply_to?: Message;
 }
+
+// MessageActions Component
+const MessageActions = ({ message, onDelete }: {
+  message: Message;
+  onDelete: () => void;
+}) => {
+  const { user } = useAuthStore();
+  const [showActions, setShowActions] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleDeleteMessage = async () => {
+    if (!confirm('Are you sure you want to delete this message?')) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Delete the message from database
+      const { error } = await supabase
+        .from('messages')
+        .delete()
+        .eq('id', message.id);
+
+      if (error) throw error;
+
+      // Log the action
+      await supabase
+        .from('nest_actions')
+        .insert({
+          nest_id: message.nest_id,
+          target_user_id: message.user_id,
+          action_by: user?.id || '',
+          action_type: 'delete_message',
+          reason: 'Message deleted by moderator',
+        });
+
+      onDelete();
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      alert('Failed to delete message');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setShowActions(!showActions)}
+        disabled={loading}
+        className="text-muted-foreground hover:text-primary transition-colors"
+      >
+        <MoreVertical className="w-3 h-3" />
+      </button>
+      
+      {showActions && (
+        <div className="absolute right-0 top-full mt-1 bg-white border rounded-lg shadow-lg z-10 min-w-32">
+          <button
+            onClick={handleDeleteMessage}
+            disabled={loading}
+            className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 disabled:opacity-50"
+          >
+            Delete Message
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function NestChatPage() {
   const router = useRouter();
@@ -201,6 +271,23 @@ export default function NestChatPage() {
     e.preventDefault();
     if (!newMessage.trim() || !user) return;
 
+    // Check if user is banned from this nest
+    try {
+      const { data: banData, error: banError } = await supabase
+        .from('nest_bans')
+        .select('*')
+        .eq('nest_id', nestId)
+        .eq('user_id', user.id)
+        .single();
+
+      if (banData) {
+        alert('You are banned from this nest and cannot send messages.');
+        return;
+      }
+    } catch (error) {
+      // User is not banned, continue
+    }
+
     console.log('SENDING'+newMessage)
     try {
       const messageData = {
@@ -304,18 +391,9 @@ export default function NestChatPage() {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const getDisplayName = (message: Message) => {
-    if (message.is_anonymous) {
-      return message.anonymous_name || 'Anonymous Student';
-    }
-    return message.user?.name || 'Unknown User';
-  };
 
-  const getAuraColor = (level: number) => {
-    if (level >= 5) return 'text-purple-600';
-    if (level >= 3) return 'text-blue-600';
-    return 'text-accent-blue';
-  };
+
+
 
   if (loading) {
     return (
@@ -342,13 +420,24 @@ export default function NestChatPage() {
           </div>
         </div>
         
-        <HueButton
-          variant={isAnonymous ? "default" : "ghost"}
-          size="sm"
-          onClick={() => setIsAnonymous(!isAnonymous)}
-        >
-          {isAnonymous ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-        </HueButton>
+        <div className="flex items-center space-x-2">
+          <HueButton
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push(`/nest/${nestId}`)}
+            title="View Nest Profile"
+          >
+            <Users className="w-4 h-4" />
+          </HueButton>
+          
+          <HueButton
+            variant={isAnonymous ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setIsAnonymous(!isAnonymous)}
+          >
+            {isAnonymous ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </HueButton>
+        </div>
       </div>
 
       {/* Messages */}
@@ -359,7 +448,7 @@ export default function NestChatPage() {
             {message.reply_to && (
               <div className="ml-4 p-2 bg-accent-blue/10 rounded-lg border-l-2 border-accent-blue">
                 <p className="text-xs text-muted-foreground">
-                  Replying to {getDisplayName(message.reply_to)}
+                  Replying to message
                 </p>
                 <p className="text-sm truncate">{message.reply_to.content}</p>
               </div>
@@ -372,51 +461,36 @@ export default function NestChatPage() {
                   ? 'bg-primary text-white' 
                   : 'bg-white border border-white/30'
               } rounded-2xl p-3 space-y-2`}>
-                {/* Sender Info */}
-                {message.user_id !== user?.id && (index === 0 || messages[index - 1].user_id !== message.user_id) && (
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="w-6 h-6">
-                      {!message.is_anonymous && message.user ? (
-                        <AvatarImage src={message.user.avatar_url || ''} alt="User avatar" />
-                      ) : null}
-                      <AvatarFallback className="bg-accent-blue/20 text-primary text-xs">
-                        {message.is_anonymous ? 'A' : message.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="font-medium text-sm text-primary">
-                      {getDisplayName(message)}
-                    </span>
-                    {!message.is_anonymous && message.user && (
-                      <span className={`text-xs font-bold ${getAuraColor(message.user.aura_level)}`}>
-                        L{message.user.aura_level}
-                      </span>
-                    )}
-                  </div>
-                )}
+
                 
                 {/* Content */}
                 <p className="text-sm">{message.content}</p>
                 
                 {/* Actions */}
-                <div className="flex items-center justify-between text-xs">
-                  <span className={message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'}>
-                    {formatTime(message.created_at)}
-                  </span>
-                  
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setReplyingTo(message)}
-                      className={`hover:scale-110 transition-transform ${
-                        message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
-                      }`}
-                    >
-                      <Reply className="w-3 h-3" />
-                    </button>
+                                  <div className="flex items-center justify-between text-xs">
+                    <span className={message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'}>
+                      {formatTime(message.created_at)}
+                    </span>
                     
-                    {/* Reactions  */}
-                    <div className="flex items-center space-x-1">
+                    <div className="flex items-center space-x-2">
                       <button
-                        onClick={() => handleReaction(message.id, 'upvote')}
+                        onClick={() => setReplyingTo(message)}
+                        className={`hover:scale-110 transition-transform ${
+                          message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
+                        }`}
+                      >
+                        <Reply className="w-3 h-3" />
+                      </button>
+                      
+                      {/* Moderator Actions */}
+                      {(userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin') && (
+                        <MessageActions message={message} onDelete={fetchMessages} />
+                      )}
+                      
+                      {/* Reactions  */}
+                      <div className="flex items-center space-x-1">
+                        <button
+                          onClick={() => handleReaction(message.id, 'upvote')}
                         className={`hover:scale-110 transition-transform ${
                           message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
                         }`}
@@ -443,7 +517,7 @@ export default function NestChatPage() {
         <div className="px-4 py-2 bg-accent-blue/10 border-t border-white/20">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <p className="text-xs text-muted-foreground">Replying to {getDisplayName(replyingTo)}</p>
+              <p className="text-xs text-muted-foreground">Replying to message</p>
               <p className="text-sm truncate">{replyingTo.content}</p>
             </div>
             <HueButton variant="ghost" size="sm" onClick={() => setReplyingTo(null)}>

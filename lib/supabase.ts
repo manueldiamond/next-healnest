@@ -180,6 +180,73 @@ export type Database = {
           created_at?: string;
         };
       };
+      nest_bans: {
+        Row: {
+          id: string;
+          nest_id: string;
+          user_id: string;
+          banned_by: string;
+          reason: string | null;
+          created_at: string;
+          expires_at: string | null;
+          is_permanent: boolean;
+        };
+        Insert: {
+          id?: string;
+          nest_id: string;
+          user_id: string;
+          banned_by: string;
+          reason?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+          is_permanent?: boolean;
+        };
+        Update: {
+          id?: string;
+          nest_id?: string;
+          user_id?: string;
+          banned_by?: string;
+          reason?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+          is_permanent?: boolean;
+        };
+      };
+      nest_actions: {
+        Row: {
+          id: string;
+          nest_id: string;
+          target_user_id: string;
+          action_by: string;
+          action_type: 'kick' | 'ban' | 'warn' | 'mute' | 'delete_message';
+          reason: string | null;
+          created_at: string;
+          expires_at: string | null;
+          is_active: boolean;
+        };
+        Insert: {
+          id?: string;
+          nest_id: string;
+          target_user_id: string;
+          action_by: string;
+          action_type: 'kick' | 'ban' | 'warn' | 'mute' | 'delete_message';
+          reason?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+          is_active?: boolean;
+        };
+        Update: {
+          id?: string;
+          nest_id?: string;
+          target_user_id?: string;
+          action_by?: string;
+          action_type?: 'kick' | 'ban' | 'warn' | 'mute';
+          reason?: string | null;
+          created_at?: string;
+          expires_at?: string | null;
+          is_active?: boolean;
+        };
+      };
     };
   };
 };

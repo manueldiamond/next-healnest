@@ -78,6 +78,8 @@ export default function UserManagementPage() {
       role: user.role,
       bio: user.bio,
       university: user.university,
+      aura_points: user.aura_points,
+      aura_level: user.aura_level,
     });
   };
 
@@ -238,6 +240,29 @@ export default function UserManagementPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-primary">Aura Points</label>
+                      <Input
+                        type="number"
+                        value={editForm.aura_points || 0}
+                        onChange={(e) => setEditForm({ ...editForm, aura_points: parseInt(e.target.value) || 0 })}
+                        className="hue-input mt-1"
+                        min="0"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-primary">Aura Level</label>
+                      <Input
+                        type="number"
+                        value={editForm.aura_level || 1}
+                        onChange={(e) => setEditForm({ ...editForm, aura_level: parseInt(e.target.value) || 1 })}
+                        className="hue-input mt-1"
+                        min="1"
+                        max="100"
+                      />
+                    </div>
                   </div>
                 </div>
               ) : (
@@ -270,6 +295,9 @@ export default function UserManagementPage() {
                         </span>
                         <span className="text-xs text-muted-foreground">
                           Aura Level {user.aura_level}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          ({user.aura_points} points)
                         </span>
                       </div>
                     </div>

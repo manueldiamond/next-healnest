@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Users, Crown, Eye, MessageCircle, Trash2, Edit, Plus } from 'lucide-react';
+import { ArrowLeft, Users, Crown, Eye, MessageCircle, Trash2, Edit, Plus, MoreVertical } from 'lucide-react';
 import { HueButton } from '@/components/ui/hue-button';
 import { HueCard, HueCardContent, HueCardHeader, HueCardTitle } from '@/components/ui/hue-card';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -22,6 +22,9 @@ interface NestDetails {
   is_private: boolean;
   created_at: string;
 }
+
+
+
 
 // ModeratorSelector Component
 const ModeratorSelector = ({ nestId, onModeratorAdded, existingModerators }: {
@@ -121,11 +124,13 @@ export default function NestProfilePage() {
   const [isMember, setIsMember] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [showModeratorModal, setShowModeratorModal] = useState(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
   const [editData, setEditData] = useState({
     name: '',
     description: '',
   });
   const [moderators, setModerators] = useState<any[]>([]);
+  const [members, setMembers] = useState<any[]>([]);
 
   useEffect(() => {
     if (!user) {
@@ -168,6 +173,19 @@ export default function NestProfilePage() {
 
       if (!moderatorsError) {
         setModerators(moderatorsData || []);
+      }
+
+      // Fetch all members
+      const { data: membersData, error: membersError } = await supabase
+        .from('nest_members')
+        .select(`
+          *,
+          user:users(name, username, avatar_url, aura_level)
+        `)
+        .eq('nest_id', nestId);
+
+      if (!membersError) {
+        setMembers(membersData || []);
       }
 
       // Initialize edit data
@@ -477,6 +495,18 @@ export default function NestProfilePage() {
             </HueButton>
           </>
         )}
+
+        {/* Moderator Actions */}
+        {(userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin') && (
+          <HueButton 
+            variant="outline" 
+            onClick={() => setShowMemberModal(true)}
+            className="w-full"
+          >
+            <Users className="w-5 h-5 mr-2" />
+            Manage Members
+          </HueButton>
+        )}
       </div>
 
       {/* Community Guidelines */}
@@ -547,6 +577,56 @@ export default function NestProfilePage() {
                 onModeratorAdded={fetchNestDetails}
                 existingModerators={moderators.map(m => m.user_id)}
               />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Member Management Modal */}
+      <Dialog open={showMemberModal} onOpenChange={setShowMemberModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Manage Members</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {/* Members List */}
+            <div>
+              <h3 className="font-semibold text-primary mb-2">Nest Members</h3>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {members.length > 0 ? (
+                  members.map((member) => (
+                    <div key={member.id} className="flex items-center justify-between p-2 bg-accent-blue/10 rounded-lg">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="w-8 h-8">
+                          {member.user?.avatar_url ? (
+                            <AvatarImage src={member.user.avatar_url} alt="Member avatar" />
+                          ) : (
+                            <AvatarFallback className="bg-hue-gradient text-white text-xs">
+                              {member.user?.name?.charAt(0)?.toUpperCase() || 'M'}
+                            </AvatarFallback>
+                          )}
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-sm">{member.user?.name}</p>
+                          <p className="text-xs text-muted-foreground">@{member.user?.username}</p>
+                          <p className="text-xs text-muted-foreground">Level {member.user?.aura_level}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs bg-accent-blue/20 text-accent-blue px-2 py-1 rounded-full">
+                          {member.role}
+                        </span>
+                        {(userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin') && member.role === 'member' && (
+                          <MemberActions member={member} nestId={nestId} onAction={fetchNestDetails} />
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-muted-foreground">No members found</p>
+                )}
+              </div>
             </div>
           </div>
         </DialogContent>

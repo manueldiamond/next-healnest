@@ -207,7 +207,7 @@ export default function ChatsPage() {
       )}
 
       {/* Create Nest FAB */}
- {(userProfile.role === 'admin' || userProfile.role === 'super_admin') &&
+ {(userProfile?.role === 'admin' || userProfile?.role === 'super_admin') &&
       <div className="fixed bottom-32 right-4 z-50">
         <HueButton 
           size="icon" 

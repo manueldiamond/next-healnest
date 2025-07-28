@@ -48,20 +48,57 @@ export default function NestProfilePage() {
   });
   const [showAvatarModal, setShowAvatarModal] = useState(false);
 
-  // Nest avatar options
+  // Nest avatar options - Fancy icons for different nest types
   const nestAvatarOptions = [
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Study',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Health',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Support',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Community',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Wellness',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Friends',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Growth',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Peace',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Unity',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Hope',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Strength',
-    'https://api.dicebear.com/7.x/bottts/svg?seed=Wisdom',
+    // Mental Health & Wellness
+    'https://api.dicebear.com/7.x/icons/svg?seed=anxiety&backgroundColor=ffe2f1&icon=heart',
+    'https://api.dicebear.com/7.x/icons/svg?seed=depression&backgroundColor=a5c8e4&icon=cloud',
+    'https://api.dicebear.com/7.x/icons/svg?seed=stress&backgroundColor=f9f0c1&icon=zap',
+    'https://api.dicebear.com/7.x/icons/svg?seed=burnout&backgroundColor=ff6b6b&icon=flame',
+    'https://api.dicebear.com/7.x/icons/svg?seed=overthinking&backgroundColor=4ecdc4&icon=brain',
+    'https://api.dicebear.com/7.x/icons/svg?seed=loneliness&backgroundColor=45b7d1&icon=users',
+    
+    // Academic & Study
+    'https://api.dicebear.com/7.x/icons/svg?seed=study&backgroundColor=96ceb4&icon=book',
+    'https://api.dicebear.com/7.x/icons/svg?seed=exam&backgroundColor=ffeaa7&icon=target',
+    'https://api.dicebear.com/7.x/icons/svg?seed=deadline&backgroundColor=dda0dd&icon=clock',
+    'https://api.dicebear.com/7.x/icons/svg?seed=procrastination&backgroundColor=fdcb6e&icon=hourglass',
+    
+    // Financial & Money
+    'https://api.dicebear.com/7.x/icons/svg?seed=money&backgroundColor=00b894&icon=dollar-sign',
+    'https://api.dicebear.com/7.x/icons/svg?seed=budget&backgroundColor=74b9ff&icon=calculator',
+    'https://api.dicebear.com/7.x/icons/svg?seed=debt&backgroundColor=e17055&icon=credit-card',
+    'https://api.dicebear.com/7.x/icons/svg?seed=investing&backgroundColor=6c5ce7&icon=trending-up',
+    
+    // Relationships & Social
+    'https://api.dicebear.com/7.x/icons/svg?seed=heartbreak&backgroundColor=fd79a8&icon=heart-off',
+    'https://api.dicebear.com/7.x/icons/svg?seed=friendship&backgroundColor=a29bfe&icon=users',
+    'https://api.dicebear.com/7.x/icons/svg?seed=family&backgroundColor=fd79a8&icon=home',
+    'https://api.dicebear.com/7.x/icons/svg?seed=dating&backgroundColor=00cec9&icon=heart',
+    
+    // Career & Work
+    'https://api.dicebear.com/7.x/icons/svg?seed=career&backgroundColor=636e72&icon=briefcase',
+    'https://api.dicebear.com/7.x/icons/svg?seed=interview&backgroundColor=2d3436&icon=user-check',
+    'https://api.dicebear.com/7.x/icons/svg?seed=workplace&backgroundColor=0984e3&icon=building',
+    'https://api.dicebear.com/7.x/icons/svg?seed=entrepreneur&backgroundColor=fdcb6e&icon=zap',
+    
+    // Physical Health
+    'https://api.dicebear.com/7.x/icons/svg?seed=fitness&backgroundColor=00b894&icon=activity',
+    'https://api.dicebear.com/7.x/icons/svg?seed=nutrition&backgroundColor=fdcb6e&icon=apple',
+    'https://api.dicebear.com/7.x/icons/svg?seed=sleep&backgroundColor=6c5ce7&icon=moon',
+    'https://api.dicebear.com/7.x/icons/svg?seed=meditation&backgroundColor=00cec9&icon=feather',
+    
+    // Creative & Hobbies
+    'https://api.dicebear.com/7.x/icons/svg?seed=art&backgroundColor=e84393&icon=palette',
+    'https://api.dicebear.com/7.x/icons/svg?seed=music&backgroundColor=a29bfe&icon=music',
+    'https://api.dicebear.com/7.x/icons/svg?seed=writing&backgroundColor=74b9ff&icon=pen-tool',
+    'https://api.dicebear.com/7.x/icons/svg?seed=gaming&backgroundColor=6c5ce7&icon=gamepad-2',
+    
+    // Support & Recovery
+    'https://api.dicebear.com/7.x/icons/svg?seed=recovery&backgroundColor=00b894&icon=leaf',
+    'https://api.dicebear.com/7.x/icons/svg?seed=support&backgroundColor=fd79a8&icon=shield',
+    'https://api.dicebear.com/7.x/icons/svg?seed=therapy&backgroundColor=74b9ff&icon=heart-pulse',
+    'https://api.dicebear.com/7.x/icons/svg?seed=growth&backgroundColor=fdcb6e&icon=sprout',
   ];
   const [moderators, setModerators] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
@@ -584,7 +621,7 @@ export default function NestProfilePage() {
       <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Choose Nest Avatar</DialogTitle>
+            <DialogTitle>Choose Nest Icon</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-4 gap-3 max-h-96 overflow-y-auto">
             {nestAvatarOptions.map((avatar, index) => (

@@ -15,9 +15,9 @@ export function Navbar() {
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    router.push('/');
     setUser(null);
     setUserProfile(null);
-    router.push('/');
   };
 
   if (!user || pathname === '/' || pathname === '/auth' || pathname === '/onboarding') {

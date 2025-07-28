@@ -7,6 +7,7 @@ import { HueButton } from '@/components/ui/hue-button';
 import { HueCard, HueCardContent } from '@/components/ui/hue-card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 import type { Database } from '@/lib/supabase';
@@ -243,11 +244,15 @@ export default function UserManagementPage() {
                 // User Display
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-full bg-hue-gradient flex items-center justify-center">
-                      <span className="text-white font-bold text-sm">
-                        {user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
-                      </span>
-                    </div>
+                    <Avatar className="w-10 h-10">
+                      {user.avatar_url ? (
+                        <AvatarImage src={user.avatar_url} alt="User avatar" />
+                      ) : (
+                        <AvatarFallback className="bg-hue-gradient text-white text-sm">
+                          {user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
+                        </AvatarFallback>
+                      )}
+                    </Avatar>
                     
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center space-x-2">

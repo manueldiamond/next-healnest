@@ -8,6 +8,7 @@ import { HueCard, HueCardContent, HueCardHeader, HueCardTitle } from '@/componen
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 import { calculateAuraLevel, getAuraLevelName } from '@/lib/utils/anonymous-names';
@@ -122,9 +123,15 @@ export default function ProfilePage() {
         <HueCardContent className="pt-6">
           <div className="text-center space-y-4">
             {/* Avatar */}
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-xl">
-              <User className="w-10 h-10 text-white" />
-            </div>
+            <Avatar className="w-20 h-20 mx-auto">
+              {userProfile.avatar_url ? (
+                <AvatarImage src={userProfile.avatar_url} alt="Profile avatar" />
+              ) : (
+                <AvatarFallback className="bg-hue-gradient text-white text-2xl">
+                  {userProfile.name?.charAt(0)?.toUpperCase() || 'U'}
+                </AvatarFallback>
+              )}
+            </Avatar>
 
             {/* Basic Info */}
             <div className="space-y-3">

@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, EyeOff, Eye, MoreVertical } from 'lucide-react';
 import { HueButton } from '@/components/ui/hue-button';
 import { Input } from '@/components/ui/input';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
 import { Database, supabase } from '@/lib/supabase';
 import { generateAnonymousName } from '@/lib/utils/anonymous-names';
@@ -24,6 +25,7 @@ interface Message {
     name: string;
     username: string;
     aura_level: number;
+    avatar_url?: string;
   };
   reply_to?: Message;
 }
@@ -145,8 +147,8 @@ export default function NestChatPage() {
         .from('messages')
         .select(`
           *,
-          user:users(name, username, aura_level),
-          reply_to:messages(id, content, user_id, is_anonymous, anonymous_name, user:users(name, username))
+          user:users(name, username, aura_level, avatar_url),
+          reply_to:messages(id, content, user_id, is_anonymous, anonymous_name, user:users(name, username, avatar_url))
         `)
         .eq('nest_id', nestId)
         .order('created_at', { ascending: true });
@@ -373,6 +375,14 @@ export default function NestChatPage() {
                 {/* Sender Info */}
                 {message.user_id !== user?.id && (index === 0 || messages[index - 1].user_id !== message.user_id) && (
                   <div className="flex items-center space-x-2">
+                    <Avatar className="w-6 h-6">
+                      {!message.is_anonymous && message.user ? (
+                        <AvatarImage src={message.user.avatar_url || ''} alt="User avatar" />
+                      ) : null}
+                      <AvatarFallback className="bg-accent-blue/20 text-primary text-xs">
+                        {message.is_anonymous ? 'A' : message.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
                     <span className="font-medium text-sm text-primary">
                       {getDisplayName(message)}
                     </span>

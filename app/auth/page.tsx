@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { Mail, Lock, User, ArrowLeft, X } from 'lucide-react';
 import Link from 'next/link';
 import { HueButton } from '@/components/ui/hue-button';
 import { HueCard, HueCardContent, HueCardHeader, HueCardTitle } from '@/components/ui/hue-card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 
@@ -22,8 +24,9 @@ export default function AuthPage() {
     username: '',
     avatar_url: '',
   });
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
 
-  // Pre-defined avatar options
+  // Extended avatar options
   const avatarOptions = [
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily',
@@ -33,6 +36,18 @@ export default function AuthPage() {
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam',
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan',
     'https://api.dicebear.com/7.x/avataaars/svg?seed=Casey',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Riley',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Avery',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Quinn',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Taylor',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Morgan',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Skyler',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Rowan',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Emery',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Blake',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Dakota',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=River',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Sage',
   ];
 
   useEffect(() => {
@@ -108,7 +123,7 @@ export default function AuthPage() {
         <HueCard>
           <HueCardHeader className="text-center">
             <HueCardTitle className="text-2xl">
-              {isLogin ? 'Welcome Back' : 'Join HueNest'}
+              {isLogin ? 'Welcome Back' : 'Join HealNest'}
             </HueCardTitle>
             <p className="text-muted-foreground">
               {isLogin ? 'Sign in to your account' : 'Create your safe space account'}
@@ -138,25 +153,24 @@ export default function AuthPage() {
 
                   <div className="space-y-2">
                     <Label>Choose Your Avatar</Label>
-                    <div className="grid grid-cols-4 gap-3">
-                      {avatarOptions.map((avatar, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, avatar_url: avatar })}
-                          className={`w-16 h-16 rounded-full border-2 transition-all ${
-                            formData.avatar_url === avatar
-                              ? 'border-primary scale-110'
-                              : 'border-gray-200 hover:border-primary/50'
-                          }`}
-                        >
-                          <img
-                            src={avatar}
-                            alt={`Avatar ${index + 1}`}
-                            className="w-full h-full rounded-full object-cover"
-                          />
-                        </button>
-                      ))}
+                    <div className="flex items-center space-x-3">
+                      <Avatar className="w-16 h-16">
+                        {formData.avatar_url ? (
+                          <AvatarImage src={formData.avatar_url} alt="Selected avatar" />
+                        ) : (
+                          <AvatarFallback className="bg-accent-blue/20 text-primary text-lg">
+                            ?
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <HueButton
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowAvatarModal(true)}
+                        className="flex-1"
+                      >
+                        {formData.avatar_url ? 'Change Avatar' : 'Select Avatar'}
+                      </HueButton>
                     </div>
                     {!formData.avatar_url && (
                       <p className="text-xs text-muted-foreground">
@@ -222,6 +236,38 @@ export default function AuthPage() {
           </HueCardContent>
         </HueCard>
       </div>
+
+      {/* Avatar Selection Modal */}
+      <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose Your Avatar</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-4 gap-3 max-h-96 overflow-y-auto">
+            {avatarOptions.map((avatar, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => {
+                  setFormData({ ...formData, avatar_url: avatar });
+                  setShowAvatarModal(false);
+                }}
+                className={`w-16 h-16 rounded-full border-2 transition-all hover:scale-110 ${
+                  formData.avatar_url === avatar
+                    ? 'border-primary scale-110'
+                    : 'border-gray-200 hover:border-primary/50'
+                }`}
+              >
+                <img
+                  src={avatar}
+                  alt={`Avatar ${index + 1}`}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

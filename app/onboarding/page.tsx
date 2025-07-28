@@ -79,8 +79,8 @@ export default function OnboardingPage() {
     return (
       <div className="min-h-screen flex items-center justify-center px-4 py-8">
         <div className="max-w-md w-full text-center space-y-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-2xl">
-            <Sparkles className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-2xl overflow-hidden">
+            <img src="/logo.png" alt="HealNest Logo" className="w-12 h-12 object-contain" />
           </div>
           
           <div className="space-y-4">

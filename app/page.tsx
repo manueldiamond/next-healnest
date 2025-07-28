@@ -53,8 +53,8 @@ export default function LandingPage() {
       <section className="flex-1 flex items-center justify-center px-4 py-16">
         <div className="max-w-md w-full text-center space-y-8">
           {/* Logo */}
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-2xl">
-            <Sparkles className="w-10 h-10 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-2xl overflow-hidden">
+            <img src="/logo.png" alt="HealNest Logo" className="w-12 h-12 object-contain" />
           </div>
           
           {/* Heading */}

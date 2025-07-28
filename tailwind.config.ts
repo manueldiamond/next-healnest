@@ -104,7 +104,7 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'hue-gradient': 'linear-gradient(135deg, #080334 0%, #a5c8e4 50%, #f9f0c1 100%)',
+        'hue-gradient': 'linear-gradient(135deg, #080334 0%, #ffe2f1 25%, #a5c8e4 50%, #f9f0c1 100%)',
       },
     },
   },

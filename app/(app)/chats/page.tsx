@@ -132,16 +132,21 @@ export default function ChatsPage() {
   return (
     <div className="max-w-md container mx-auto px-4 py-6 space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-primary">Your Nests</h1>
-        <p className="text-muted-foreground">
-          Welcome back, {userProfile?.name || 'friend'}! 
-          {userProfile && (
-            <span className="block text-sm text-accent-blue">
-              Aura Level {userProfile.aura_level} • {userProfile.aura_points} points
-            </span>
-          )}
-        </p>
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-hue-gradient shadow-lg overflow-hidden mx-auto">
+          <img src="/logo.png" alt="HealNest Logo" className="w-10 h-10 object-contain" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-primary">Your Nests</h1>
+          <p className="text-muted-foreground">
+            Welcome back, {userProfile?.name || 'friend'}! 
+            {userProfile && (
+              <span className="block text-sm text-accent-blue">
+                Aura Level {userProfile.aura_level} • {userProfile.aura_points} points
+              </span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Search */}

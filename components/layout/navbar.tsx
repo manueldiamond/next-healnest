@@ -25,7 +25,6 @@ export function Navbar() {
   }
 
   return (
-    //<div className='h-[100px]'>
     <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-lg border-t border-white/20 shadow-lg z-50">
       <div className="max-w-md mx-auto px-4 py-3">
         <div className="flex items-center justify-around">
@@ -68,6 +67,5 @@ export function Navbar() {
         </div>
       </div>
     </nav>
-//</div>
   );
 }

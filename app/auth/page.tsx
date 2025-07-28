@@ -122,6 +122,9 @@ export default function AuthPage() {
 
         <HueCard>
           <HueCardHeader className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-hue-gradient shadow-lg overflow-hidden mx-auto mb-4">
+              <img src="/logo.png" alt="HealNest Logo" className="w-10 h-10 object-contain" />
+            </div>
             <HueCardTitle className="text-2xl">
               {isLogin ? 'Welcome Back' : 'Join HealNest'}
             </HueCardTitle>

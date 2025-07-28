@@ -1,9 +1,8 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Navbar } from '@/components/layout/navbar';
+import { Inter, Poppins } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
 export const metadata: Metadata = {
   title: 'HealNest - Your Safe Space for Better Mental Health',
@@ -19,12 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="min-h-screen max-h-screen h-screen flex flex-col">
-          <main className='flex-1 flex flex-col overflow-y-auto pb-[80px] '>
-            {children}
-          </main>
-          <Navbar />
-        </div>
+        <main className="flex-1 flex flex-col overflow-y-auto">
+          {children}
+        </main>
       </body>
     </html>
   );

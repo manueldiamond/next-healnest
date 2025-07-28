@@ -407,15 +407,15 @@ export default function NestChatPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto flex flex-col w-full h-full bg-gradient-to-b from-white to-accent-blue/5">
+    <div className="max-w-md mx-auto flex flex-col w-full h-full bg-gradient-to-b from-accent-pink/10 via-white to-accent-yellow/10">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-white/20">
+      <div className="flex items-center justify-between p-4 backdrop-blur-md bg-glass-gradient border-b border-white/20 shadow-aura-glow">
         <div className="flex items-center space-x-3">
-          <HueButton variant="ghost" size="icon" onClick={() => router.back()}>
+          <HueButton variant="ghost" size="icon" onClick={() => router.back()} className="backdrop-blur-md bg-white/20 hover:bg-white/30">
             <ArrowLeft className="w-5 h-5" />
           </HueButton>
           <div>
-            <h1 className="font-semibold text-primary">{nestDetails?.name} Chat</h1>
+            <h1 className="font-semibold text-primary text-lg">{nestDetails?.name} Chat</h1>
             <p className="text-xs text-muted-foreground">{messages.length} messages</p>
           </div>
         </div>
@@ -426,6 +426,7 @@ export default function NestChatPage() {
             size="icon"
             onClick={() => router.push(`/nest/${nestId}`)}
             title="View Nest Profile"
+            className="backdrop-blur-md bg-white/20 hover:bg-white/30"
           >
             <Users className="w-4 h-4" />
           </HueButton>
@@ -434,6 +435,7 @@ export default function NestChatPage() {
             variant={isAnonymous ? "default" : "ghost"}
             size="sm"
             onClick={() => setIsAnonymous(!isAnonymous)}
+            className={isAnonymous ? "bg-gradient-to-r from-accent-pink to-accent-yellow shadow-aura-glow" : "backdrop-blur-md bg-white/20 hover:bg-white/30"}
           >
             {isAnonymous ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </HueButton>
@@ -446,7 +448,7 @@ export default function NestChatPage() {
           <div key={message.id} className="space-y-2">
             {/* Reply Reference */}
             {message.reply_to && (
-              <div className="ml-4 p-2 bg-accent-blue/10 rounded-lg border-l-2 border-accent-blue">
+              <div className="ml-4 p-3 backdrop-blur-md bg-glass-gradient rounded-xl border-l-2 border-accent-pink">
                 <p className="text-xs text-muted-foreground">
                   Replying to message
                 </p>
@@ -458,8 +460,8 @@ export default function NestChatPage() {
             <div className={`flex ${message.user_id === user?.id ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-[80%] ${
                 message.user_id === user?.id 
-                  ? 'bg-primary text-white' 
-                  : 'bg-white border border-white/30'
+                  ? 'bg-gradient-to-r from-accent-pink to-accent-yellow text-white shadow-aura-glow' 
+                  : 'backdrop-blur-md bg-glass-gradient border border-white/30 shadow-lg'
               } rounded-2xl p-3 space-y-2`}>
 
                 
@@ -514,13 +516,13 @@ export default function NestChatPage() {
 
       {/* Reply Bar */}
       {replyingTo && (
-        <div className="px-4 py-2 bg-accent-blue/10 border-t border-white/20">
+        <div className="px-4 py-3 backdrop-blur-md bg-glass-gradient border-t border-white/20">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Replying to message</p>
               <p className="text-sm truncate">{replyingTo.content}</p>
             </div>
-            <HueButton variant="ghost" size="sm" onClick={() => setReplyingTo(null)}>
+            <HueButton variant="ghost" size="sm" onClick={() => setReplyingTo(null)} className="backdrop-blur-md bg-white/20 hover:bg-white/30">
               ×
             </HueButton>
           </div>
@@ -528,23 +530,28 @@ export default function NestChatPage() {
       )}
 
       {/* Input */}
-      <form onSubmit={sendMessage} className="p-4 bg-white/80 backdrop-blur-sm border-t border-white/20">
+      <form onSubmit={sendMessage} className="p-4 backdrop-blur-md bg-glass-gradient border-t border-white/20 shadow-aura-glow">
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative">
             <Input
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder={isAnonymous ? "Send anonymously..." : "Type a message..."}
-              className="hue-input pr-12"
+              className="backdrop-blur-md bg-white/20 border-white/30 focus:bg-white/30 transition-all duration-300"
             />
           </div>
-          <HueButton type="submit" size="icon" disabled={!newMessage.trim()}>
+          <HueButton 
+            type="submit" 
+            size="icon" 
+            disabled={!newMessage.trim()}
+            className="bg-gradient-to-r from-accent-pink to-accent-yellow hover:shadow-aura-glow transition-all duration-300"
+          >
             <Send className="w-4 h-4" />
           </HueButton>
         </div>
         
         {isAnonymous && (
-          <p className="text-xs text-accent-blue mt-2">
+          <p className="text-xs text-accent-pink mt-2 font-medium">
             🎭 Anonymous mode: Your message will appear from a random username
           </p>
         )}

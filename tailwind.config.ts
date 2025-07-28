@@ -26,8 +26,10 @@ const config: Config = {
           foreground: '#ffffff',
         },
         accent: {
-          blue: '#a5c8e4',
-          yellow: '#f9f0c1',
+          pink: '#FFE2F1',
+          blue: '#A5C8E4',
+          yellow: '#F9F0C1',
+          dark: '#080334',
           foreground: '#080334',
         },
         // Existing shadcn colors
@@ -104,7 +106,9 @@ const config: Config = {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'hue-gradient': 'linear-gradient(135deg, #080334 0%, #ffe2f1 25%, #a5c8e4 50%, #f9f0c1 100%)',
+        'hue-gradient': 'linear-gradient(145deg, #FFE2F1, #F9F0C1)',
+        'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
+        'aura-glow': '0 0 20px rgba(255, 226, 241, 0.3)',
       },
     },
   },

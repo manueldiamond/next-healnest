@@ -12,6 +12,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
+import { MemberActions } from '@/components/ui/member-actions';
+import { ModeratorSelector } from '@/components/ui/moderator-selector';
 
 interface NestDetails {
   id: string;
@@ -26,93 +28,7 @@ interface NestDetails {
 
 
 
-// ModeratorSelector Component
-const ModeratorSelector = ({ nestId, onModeratorAdded, existingModerators }: {
-  nestId: string;
-  onModeratorAdded: () => void;
-  existingModerators: string[];
-}) => {
-  const [members, setMembers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchMembers();
-  }, [nestId]);
-
-  const fetchMembers = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('nest_members')
-        .select(`
-          *,
-          user:users(name, username, avatar_url)
-        `)
-        .eq('nest_id', nestId)
-        .eq('role', 'member');
-
-      if (error) throw error;
-      setMembers(data || []);
-    } catch (error) {
-      console.error('Error fetching members:', error);
-    }
-  };
-
-  const handlePromoteToModerator = async (userId: string) => {
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('nest_members')
-        .update({ role: 'moderator' })
-        .eq('nest_id', nestId)
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      onModeratorAdded();
-    } catch (error) {
-      console.error('Error promoting to moderator:', error);
-      alert('Failed to promote user to moderator');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="space-y-2 max-h-40 overflow-y-auto">
-      {members.length > 0 ? (
-        members.map((member) => (
-          <div key={member.id} className="flex items-center justify-between p-2 bg-white border rounded-lg">
-            <div className="flex items-center space-x-2">
-              <Avatar className="w-8 h-8">
-                {member.user?.avatar_url ? (
-                  <AvatarImage src={member.user.avatar_url} alt="Member avatar" />
-                ) : (
-                  <AvatarFallback className="bg-hue-gradient text-white text-xs">
-                    {member.user?.name?.charAt(0)?.toUpperCase() || 'M'}
-                  </AvatarFallback>
-                )}
-              </Avatar>
-              <div>
-                <p className="font-medium text-sm">{member.user?.name}</p>
-                <p className="text-xs text-muted-foreground">@{member.user?.username}</p>
-              </div>
-            </div>
-            <HueButton
-              size="sm"
-              variant="outline"
-              onClick={() => handlePromoteToModerator(member.user_id)}
-              disabled={loading}
-            >
-              Promote
-            </HueButton>
-          </div>
-        ))
-      ) : (
-        <p className="text-sm text-muted-foreground">No members available to promote</p>
-      )}
-    </div>
-  );
-};
 
 export default function NestProfilePage() {
   const router = useRouter();

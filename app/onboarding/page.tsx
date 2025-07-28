@@ -26,8 +26,7 @@ export default function OnboardingPage() {
     setProfileData({ ...profileData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const createProfile = async (useDefaults = false) => {
     if (!user) return;
 
     setLoading(true);
@@ -41,10 +40,12 @@ export default function OnboardingPage() {
         .insert({
           id: user.id,
           email: user.email!,
-          name: userData.name || '',
+          name: userData.username || '',
           username: userData.username || '',
-          bio: profileData.bio,
-          university: profileData.university,
+          bio: useDefaults ? '' : profileData.bio,
+          university: useDefaults ? '' : profileData.university,
+          avatar_url: userData.avatar_url || '',
+          role: 'user',
           aura_points: 0,
           aura_level: 1,
           is_anonymous: false,
@@ -63,6 +64,15 @@ export default function OnboardingPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await createProfile(false);
+  };
+
+  const handleSkip = async () => {
+    await createProfile(true);
   };
 
   if (step === 1) {
@@ -125,7 +135,7 @@ export default function OnboardingPage() {
           <HueCardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="university">University</Label>
+                <Label htmlFor="university">University (Optional)</Label>
                 <div className="relative">
                   <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -136,7 +146,6 @@ export default function OnboardingPage() {
                     value={profileData.university}
                     onChange={handleInputChange}
                     className="pl-10 hue-input"
-                    required
                   />
                 </div>
               </div>
@@ -163,6 +172,16 @@ export default function OnboardingPage() {
               <div className="space-y-3">
                 <HueButton type="submit" className="w-full" disabled={loading}>
                   {loading ? 'Creating Profile...' : 'Complete Setup'}
+                </HueButton>
+                
+                <HueButton 
+                  type="button" 
+                  variant="outline" 
+                  onClick={handleSkip}
+                  disabled={loading}
+                  className="w-full"
+                >
+                  {loading ? 'Creating Profile...' : 'Skip for Now'}
                 </HueButton>
                 
                 <HueButton 

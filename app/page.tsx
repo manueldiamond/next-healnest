@@ -26,24 +26,24 @@ export default function LandingPage() {
 
   const features = [
     {
-      icon: <Heart className="w-8 h-8 text-accent-blue" />,
-      title: "Wellness First",
-      description: "Every interaction is designed to promote mental health and positive vibes"
+      icon: <Users className="w-8 h-8 text-accent-blue" />,
+      title: "🪹 The Nests",
+      description: "Anonymous support rooms where students share and heal in themed spaces like the Overthinking Nest, Heartbreak Nest, or Money Stress Nest."
     },
     {
-      icon: <Users className="w-8 h-8 text-accent-blue" />,
-      title: "Group Nests Only",
-      description: "Safe group conversations with no DMs - build community, not isolation"
+      icon: <Heart className="w-8 h-8 text-accent-blue" />,
+      title: "🧘 Mood Tracker + Healing Vault",
+      description: "A personal check-in space that helps users track emotions, reflect privately, and grow over time."
     },
     {
       icon: <Shield className="w-8 h-8 text-accent-blue" />,
-      title: "Anonymous Mode",
-      description: "Express yourself freely with our anonymous posting feature"
+      title: "🎯 Focus Nests",
+      description: "Timed, silent virtual rooms that help students stay productive, build consistency, and study in community."
     },
     {
       icon: <Sparkles className="w-8 h-8 text-accent-blue" />,
-      title: "Aura System",
-      description: "Level up your positive impact with our unique gamification"
+      title: "💰 Money Nest",
+      description: "Real-life hustle tips, gig boards, and budgeting support because sometimes, the root of mental stress… is money."
     }
   ];
 

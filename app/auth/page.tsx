@@ -19,9 +19,21 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    name: '',
     username: '',
+    avatar_url: '',
   });
+
+  // Pre-defined avatar options
+  const avatarOptions = [
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Lily',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Max',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Zoe',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Sam',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Jordan',
+    'https://api.dicebear.com/7.x/avataaars/svg?seed=Casey',
+  ];
 
   useEffect(() => {
     const checkUser = async () => {
@@ -57,8 +69,8 @@ export default function AuthPage() {
           password: formData.password,
           options: {
             data: {
-              name: formData.name,
               username: formData.username,
+              avatar_url: formData.avatar_url,
             },
           },
         });
@@ -108,23 +120,6 @@ export default function AuthPage() {
               {!isLogin && (
                 <>
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="name"
-                        name="name"
-                        type="text"
-                        placeholder="Your full name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className="pl-10 hue-input"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
                     <Label htmlFor="username">Username</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -139,6 +134,35 @@ export default function AuthPage() {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Choose Your Avatar</Label>
+                    <div className="grid grid-cols-4 gap-3">
+                      {avatarOptions.map((avatar, index) => (
+                        <button
+                          key={index}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, avatar_url: avatar })}
+                          className={`w-16 h-16 rounded-full border-2 transition-all ${
+                            formData.avatar_url === avatar
+                              ? 'border-primary scale-110'
+                              : 'border-gray-200 hover:border-primary/50'
+                          }`}
+                        >
+                          <img
+                            src={avatar}
+                            alt={`Avatar ${index + 1}`}
+                            className="w-full h-full rounded-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    {!formData.avatar_url && (
+                      <p className="text-xs text-muted-foreground">
+                        Please select an avatar to continue
+                      </p>
+                    )}
                   </div>
                 </>
               )}
@@ -177,7 +201,11 @@ export default function AuthPage() {
                 </div>
               </div>
 
-              <HueButton type="submit" className="w-full" disabled={loading}>
+              <HueButton 
+                type="submit" 
+                className="w-full" 
+                disabled={loading || (!isLogin && !formData.avatar_url)}
+              >
                 {loading ? 'Loading...' : isLogin ? 'Sign In' : 'Create Account'}
               </HueButton>
             </form>

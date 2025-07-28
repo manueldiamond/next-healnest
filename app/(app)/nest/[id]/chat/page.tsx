@@ -414,9 +414,20 @@ export default function NestChatPage() {
           <HueButton variant="ghost" size="icon" onClick={() => router.back()} className="backdrop-blur-md bg-white/20 hover:bg-white/30">
             <ArrowLeft className="w-5 h-5" />
           </HueButton>
-          <div>
-            <h1 className="font-semibold text-primary text-lg">{nestDetails?.name} Chat</h1>
-            <p className="text-xs text-muted-foreground">{messages.length} messages</p>
+          <div className="flex items-center space-x-3">
+            <Avatar className="w-8 h-8">
+              {nestDetails?.avatar_url ? (
+                <AvatarImage src={nestDetails.avatar_url} alt="Nest avatar" />
+              ) : (
+                <AvatarFallback className="bg-hue-gradient text-white text-xs">
+                  {nestDetails?.name?.charAt(0)?.toUpperCase() || 'N'}
+                </AvatarFallback>
+              )}
+            </Avatar>
+            <div>
+              <h1 className="font-semibold text-primary text-lg">{nestDetails?.name} Chat</h1>
+              <p className="text-xs text-muted-foreground">{messages.length} messages</p>
+            </div>
           </div>
         </div>
         

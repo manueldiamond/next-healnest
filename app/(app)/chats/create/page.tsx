@@ -8,6 +8,8 @@ import { HueCard, HueCardContent } from '@/components/ui/hue-card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
 
@@ -19,7 +21,25 @@ export default function CreateNestPage() {
     name: '',
     description: '',
     isPrivate: false,
+    avatar_url: '',
   });
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+
+  // Nest avatar options
+  const nestAvatarOptions = [
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Study',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Health',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Support',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Community',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Wellness',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Friends',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Growth',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Peace',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Unity',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Hope',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Strength',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Wisdom',
+  ];
   // Restrict access to only admins and super_admins
   const { userProfile } = useAuthStore();
 
@@ -48,6 +68,7 @@ export default function CreateNestPage() {
           name: formData.name,
           description: formData.description,
           is_private: formData.isPrivate,
+          avatar_url: formData.avatar_url,
           member_count: 1,
           created_by: user.id,
         })
@@ -101,6 +122,35 @@ export default function CreateNestPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <HueCard>
           <HueCardContent className="p-6 space-y-6">
+            {/* Nest Avatar */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-primary">
+                Nest Avatar
+              </Label>
+              <div className="flex items-center space-x-4">
+                <Avatar className="w-20 h-20 border-2 border-white/30">
+                  {formData.avatar_url ? (
+                    <AvatarImage src={formData.avatar_url} alt="Nest avatar" />
+                  ) : (
+                    <AvatarFallback className="bg-hue-gradient text-white text-xl">
+                      ?
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <HueButton
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAvatarModal(true)}
+                  className="flex-1"
+                >
+                  {formData.avatar_url ? 'Change Avatar' : 'Select Avatar'}
+                </HueButton>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Choose an avatar to represent your nest
+              </p>
+            </div>
+
             {/* Nest Name */}
             <div className="space-y-2">
               <Label htmlFor="name" className="text-sm font-medium text-primary">
@@ -194,6 +244,38 @@ export default function CreateNestPage() {
           )}
         </HueButton>
       </form>
+
+      {/* Avatar Selection Modal */}
+      <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose Nest Avatar</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-4 gap-3 max-h-96 overflow-y-auto">
+            {nestAvatarOptions.map((avatar, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => {
+                  setFormData({ ...formData, avatar_url: avatar });
+                  setShowAvatarModal(false);
+                }}
+                className={`w-16 h-16 rounded-full border-2 transition-all hover:scale-110 ${
+                  formData.avatar_url === avatar
+                    ? 'border-primary scale-110'
+                    : 'border-gray-200 hover:border-primary/50'
+                }`}
+              >
+                <img
+                  src={avatar}
+                  alt={`Nest Avatar ${index + 1}`}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 

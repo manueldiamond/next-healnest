@@ -9,6 +9,7 @@ import { HueCard, HueCardContent } from '@/components/ui/hue-card';
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface Nest {
   id: string;
@@ -133,12 +134,12 @@ export default function ChatsPage() {
     <div className="max-w-md container mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-hue-gradient shadow-lg overflow-hidden mx-auto">
-          <img src="/logo.png" alt="HealNest Logo" className="w-10 h-10 object-contain" />
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-lg overflow-hidden mx-auto">
+          <img src="/logo.png" alt="HealNest Logo" className="w-12 h-12 object-contain" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-primary">Your Nests</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-heading font-bold text-primary">Your Nests</h1>
+          <p className="text-body text-muted-foreground">
             Welcome back, {userProfile?.name || 'friend'}! 
             {userProfile && (
               <span className="block text-sm text-accent-blue">
@@ -168,11 +169,15 @@ export default function ChatsPage() {
               <HueCardContent className="pt-0">
                 <div className="flex items-center space-x-4">
                   {/* Avatar */}
-                  <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-hue-gradient flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">
-                      {getInitials(nest.name.replace(/[^\w\s]/g, ''))}
-                    </span>
-                  </div>
+                  <Avatar className="w-12 h-12 flex-shrink-0">
+                    {nest.avatar_url ? (
+                      <AvatarImage src={nest.avatar_url} alt="Nest avatar" />
+                    ) : (
+                      <AvatarFallback className="bg-hue-gradient text-white font-bold text-sm">
+                        {getInitials(nest.name.replace(/[^\w\s]/g, ''))}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
                   
                   {/* Content */}
                   <div className="flex-1 min-w-0">

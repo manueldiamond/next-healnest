@@ -14,8 +14,8 @@ export default function AppLayout({
             <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-hue-gradient shadow-lg overflow-hidden">
               <img src="/logo.png" alt="HealNest Logo" className="w-6 h-6 object-contain" />
             </div>
-            <span className="ml-3 text-lg font-bold bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent">
-              HueNest
+            <span className="ml-3 text-lg font-heading font-bold bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent">
+              HealNest
             </span>
           </div>
         </div>

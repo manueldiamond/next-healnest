@@ -9,8 +9,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'outfit': ['var(--font-outfit)', 'sans-serif'],
+        'quicksand': ['var(--font-quicksand)', 'sans-serif'],
+        'heading': ['var(--font-outfit)', 'sans-serif'],
+        'body': ['var(--font-quicksand)', 'sans-serif'],
+      },
       colors: {
-        // HueNest Custom Colors
+        // HealNest Custom Colors
         primary: {
           DEFAULT: '#080334',
           50: '#f0f0ff',

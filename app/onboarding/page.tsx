@@ -84,8 +84,8 @@ export default function OnboardingPage() {
           </div>
           
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-primary">Welcome to HueNest!</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-3xl font-heading font-bold text-primary">Welcome to HealNest!</h1>
+            <p className="text-body text-muted-foreground">
               Let's set up your profile and get you connected with your university community.
             </p>
           </div>

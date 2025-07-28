@@ -149,11 +149,11 @@ export default function UserManagementPage() {
     <div className="max-w-md container mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-hue-gradient shadow-lg overflow-hidden mx-auto">
-          <img src="/logo.png" alt="HealNest Logo" className="w-10 h-10 object-contain" />
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-lg overflow-hidden mx-auto">
+          <img src="/logo.png" alt="HealNest Logo" className="w-12 h-12 object-contain" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-primary">User Management</h1>
+          <h1 className="text-2xl font-heading font-bold text-primary">User Management</h1>
           <p className="text-muted-foreground text-sm">
             Manage user accounts and permissions
           </p>

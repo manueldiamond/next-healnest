@@ -44,7 +44,25 @@ export default function NestProfilePage() {
   const [editData, setEditData] = useState({
     name: '',
     description: '',
+    avatar_url: '',
   });
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+
+  // Nest avatar options
+  const nestAvatarOptions = [
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Study',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Health',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Support',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Community',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Wellness',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Friends',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Growth',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Peace',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Unity',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Hope',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Strength',
+    'https://api.dicebear.com/7.x/bottts/svg?seed=Wisdom',
+  ];
   const [moderators, setModerators] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
 
@@ -108,6 +126,7 @@ export default function NestProfilePage() {
       setEditData({
         name: nestData.name,
         description: nestData.description,
+        avatar_url: nestData.avatar_url || '',
       });
     } catch (error) {
       console.error('Error fetching nest details:', error);
@@ -159,6 +178,7 @@ export default function NestProfilePage() {
         .update({
           name: editData.name,
           description: editData.description,
+          avatar_url: editData.avatar_url,
           updated_at: new Date().toISOString(),
         })
         .eq('id', nestId);
@@ -267,15 +287,27 @@ export default function NestProfilePage() {
         <HueCardContent className="pt-6">
           <div className="text-center space-y-4">
             {/* Avatar */}
-            <Avatar className="w-20 h-20 mx-auto">
-              {nest.avatar_url ? (
-                <AvatarImage src={nest.avatar_url} alt="Nest avatar" />
-              ) : (
-                <AvatarFallback className="bg-hue-gradient text-white text-xl">
-                  {getInitials(nest.name.replace(/[^\w\s]/g, ''))}
-                </AvatarFallback>
+            <div className="relative">
+              <Avatar className="w-20 h-20 mx-auto">
+                {nest.avatar_url ? (
+                  <AvatarImage src={nest.avatar_url} alt="Nest avatar" />
+                ) : (
+                  <AvatarFallback className="bg-hue-gradient text-white text-xl">
+                    {getInitials(nest.name.replace(/[^\w\s]/g, ''))}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+              {isEditing && (
+                <HueButton
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setShowAvatarModal(true)}
+                  className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full"
+                >
+                  <Edit className="w-3 h-3" />
+                </HueButton>
               )}
-            </Avatar>
+            </div>
 
             {/* Name & Description */}
             <div className="space-y-2">
@@ -544,6 +576,38 @@ export default function NestProfilePage() {
                 )}
               </div>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Avatar Selection Modal */}
+      <Dialog open={showAvatarModal} onOpenChange={setShowAvatarModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Choose Nest Avatar</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-4 gap-3 max-h-96 overflow-y-auto">
+            {nestAvatarOptions.map((avatar, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => {
+                  setEditData({ ...editData, avatar_url: avatar });
+                  setShowAvatarModal(false);
+                }}
+                className={`w-16 h-16 rounded-full border-2 transition-all hover:scale-110 ${
+                  editData.avatar_url === avatar
+                    ? 'border-primary scale-110'
+                    : 'border-gray-200 hover:border-primary/50'
+                }`}
+              >
+                <img
+                  src={avatar}
+                  alt={`Nest Avatar ${index + 1}`}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </button>
+            ))}
           </div>
         </DialogContent>
       </Dialog>

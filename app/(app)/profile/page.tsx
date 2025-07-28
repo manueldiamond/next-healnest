@@ -101,11 +101,11 @@ export default function ProfilePage() {
     <div className="max-w-md mx-auto px-4 py-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-hue-gradient shadow-lg overflow-hidden">
-            <img src="/logo.png" alt="HealNest Logo" className="w-6 h-6 object-contain" />
+        <div className="flex items-center space-x-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-hue-gradient shadow-lg overflow-hidden">
+            <img src="/logo.png" alt="HealNest Logo" className="w-8 h-8 object-contain" />
           </div>
-          <h1 className="text-2xl font-bold text-primary">My Profile</h1>
+          <h1 className="text-2xl font-heading font-bold text-primary">My Profile</h1>
         </div>
         {!isEditing ? (
           <HueButton variant="ghost" size="icon" onClick={() => setIsEditing(true)}>

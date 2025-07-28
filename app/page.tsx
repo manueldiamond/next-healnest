@@ -62,16 +62,18 @@ export default function LandingPage() {
         <section className="flex-1 flex items-center justify-center px-4 py-16">
           <div className="max-w-2xl w-full text-center space-y-12">
             {/* Logo */}
-            <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-glass-gradient backdrop-blur-md shadow-aura-glow border border-white/20 animate-pulse">
-              <img src="/logo.png" alt="HealNest Logo" className="w-16 h-16 object-contain" />
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-accent-pink/30 via-accent-yellow/20 to-accent-blue/30 backdrop-blur-md shadow-aura-glow border border-white/20 animate-pulse p-1">
+              <div className="w-full h-full rounded-3xl bg-glass-gradient backdrop-blur-md flex items-center justify-center">
+                <img src="/logo.png" alt="HealNest Logo" className="w-16 h-16 object-contain" />
+              </div>
             </div>
             
             {/* Heading */}
             <div className="space-y-6">
-              <h1 className="text-6xl font-bold bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent leading-tight">
-                HueNest – A Safe Space to Feel Seen
+              <h1 className="text-6xl font-heading font-bold bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent leading-tight">
+                HealNest – A Safe Space to Feel Seen
               </h1>
-              <p className="text-xl text-muted-foreground max-w-lg mx-auto">
+              <p className="text-xl font-body text-muted-foreground max-w-lg mx-auto">
                 Built for Gen Z, by Gen Z. Safe. Wholesome. Real.
               </p>
             </div>
@@ -95,8 +97,8 @@ export default function LandingPage() {
         {/* Features Section */}
         <section className="px-4 py-20 backdrop-blur-md bg-white/10 border-t border-white/20">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-bold text-center bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent mb-16">
-              Why Choose HueNest? ✨
+            <h2 className="text-4xl font-heading font-bold text-center bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent mb-16">
+              Why Choose HealNest? ✨
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -105,8 +107,8 @@ export default function LandingPage() {
                   <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r from-accent-pink to-accent-yellow shadow-lg">
                     {feature.icon}
                   </div>
-                  <h3 className="text-2xl font-semibold text-primary">{feature.title}</h3>
-                  <p className="text-muted-foreground text-lg leading-relaxed">{feature.description}</p>
+                  <h3 className="text-2xl font-heading font-semibold text-primary">{feature.title}</h3>
+                  <p className="text-body text-muted-foreground text-lg leading-relaxed">{feature.description}</p>
                 </div>
               ))}
             </div>

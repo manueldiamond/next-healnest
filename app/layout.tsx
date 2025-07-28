@@ -1,8 +1,18 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Inter, Poppins, Outfit, Quicksand } from 'next/font/google';
 
-const inter = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
+const outfit = Outfit({ 
+  subsets: ['latin'], 
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-outfit'
+});
+
+const quicksand = Quicksand({ 
+  subsets: ['latin'], 
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-quicksand'
+});
 
 export const metadata: Metadata = {
   title: 'HealNest - Your Safe Space for Better Mental Health',
@@ -17,7 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${outfit.variable} ${quicksand.variable} font-outfit`}>
         <main className="flex-1 flex flex-col overflow-y-auto">
           {children}
         </main>

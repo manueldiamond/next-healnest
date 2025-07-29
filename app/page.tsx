@@ -8,21 +8,21 @@ import { HueButton } from '@/components/ui/hue-button';
 import { HueCard, HueCardContent, HueCardDescription, HueCardTitle } from '@/components/ui/hue-card';
 import { useAuthStore } from '@/lib/store';
 import { supabase } from '@/lib/supabase';
+import { userAgent } from 'next/server';
 
 export default function LandingPage() {
   const router = useRouter();
-  const { user, setUser } = useAuthStore();
-
+const user=useAuthStore(s=>s.user)
+  const loadprofile =useAuthStore(s=>s.loadUserProfile)
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const user = await loadprofile()
       if (user) {
-        setUser(user);
-        router.push('/chats');
+        router.push('/welcome');
       }
     };
     checkUser();
-  }, [setUser, router]);
+  }, [user, router,loadprofile]);
 
   const features = [
     {

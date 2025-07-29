@@ -7,7 +7,7 @@ import { HueButton } from '@/components/ui/hue-button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
-import { supabase } from '@/lib/supabase';
+import { Database, supabase } from '@/lib/supabase';
 import { generateAnonymousName, calculateAuraLevel } from '@/lib/utils/anonymous-names';
 import { io, Socket } from 'socket.io-client';
 

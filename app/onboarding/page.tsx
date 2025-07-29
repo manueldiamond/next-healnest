@@ -77,125 +77,139 @@ export default function OnboardingPage() {
 
   if (step === 1) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4 py-8">
+      <div className="min-h-screen bg-sand flex items-center justify-center px-4 py-8">
         <div className="max-w-md w-full text-center space-y-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-hue-gradient shadow-2xl overflow-hidden">
-            <img src="/logo.png" alt="HealNest Logo" className="w-12 h-12 object-contain" />
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-chartPink shadow-lg overflow-hidden">
+            <img 
+              src="/logo.png" 
+              alt="HealNest Logo" 
+              className="w-12 h-12 object-contain"
+              style={{
+                filter: 'invert(34%) sepia(10%) saturate(1012%) hue-rotate(110deg) brightness(90%) contrast(90%)',
+              }}
+            />
           </div>
           
           <div className="space-y-4">
             <h1 className="text-3xl font-heading font-bold text-primary">Welcome to HealNest!</h1>
-            <p className="text-body text-muted-foreground">
+            <p className="text-sm text-muted">
               Let's set up your profile and get you connected with your university community.
             </p>
           </div>
 
           <div className="space-y-4">
-            <HueCard className="p-4 text-left">
+            <div className="bg-cardBg rounded-2xl p-4 text-left">
               <div className="flex items-center space-x-3">
-                <Users className="w-6 h-6 text-accent-blue" />
+                <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-primary" />
+                </div>
                 <div>
-                  <h3 className="font-semibold">Safe Group Spaces</h3>
-                  <p className="text-sm text-muted-foreground">Join Nests with like-minded students</p>
+                  <h3 className="font-semibold text-primary">Safe Group Spaces</h3>
+                  <p className="text-sm text-muted">Join Nests with like-minded students</p>
                 </div>
               </div>
-            </HueCard>
+            </div>
 
-            <HueCard className="p-4 text-left">
+            <div className="bg-cardBg rounded-2xl p-4 text-left">
               <div className="flex items-center space-x-3">
-                <Sparkles className="w-6 h-6 text-accent-blue" />
+                <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+                  <Sparkles className="w-6 h-6 text-primary" />
+                </div>
                 <div>
-                  <h3 className="font-semibold">Aura System</h3>
-                  <p className="text-sm text-muted-foreground">Level up through positive interactions</p>
+                  <h3 className="font-semibold text-primary">Aura System</h3>
+                  <p className="text-sm text-muted">Level up through positive interactions</p>
                 </div>
               </div>
-            </HueCard>
+            </div>
           </div>
 
-          <HueButton onClick={() => setStep(2)} size="lg" className="w-full">
+          <button 
+            onClick={() => setStep(2)} 
+            className="w-full bg-primary text-white rounded-xl py-4 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center"
+          >
             Continue Setup
             <ArrowRight className="w-5 h-5 ml-2" />
-          </HueButton>
+          </button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8">
+    <div className="min-h-screen bg-sand flex items-center justify-center px-4 py-8">
       <div className="max-w-md w-full space-y-6">
-        <HueCard>
-          <HueCardHeader className="text-center">
-            <HueCardTitle className="text-2xl">Complete Your Profile</HueCardTitle>
-            <p className="text-muted-foreground">
+        <div className="bg-cardBg rounded-2xl p-6 shadow-lg">
+          <div className="text-center mb-6">
+            <h1 className="text-2xl font-heading font-semibold text-primary mb-2">Complete Your Profile</h1>
+            <p className="text-sm text-muted">
               Help us connect you with the right community
             </p>
-          </HueCardHeader>
+          </div>
 
-          <HueCardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="university">University (Optional)</Label>
-                <div className="relative">
-                  <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="university"
-                    name="university"
-                    type="text"
-                    placeholder="Which university do you attend?"
-                    value={profileData.university}
-                    onChange={handleInputChange}
-                    className="pl-10 hue-input"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="bio">Bio (Optional)</Label>
-                <Textarea
-                  id="bio"
-                  name="bio"
-                  placeholder="Tell us a bit about yourself..."
-                  value={profileData.bio}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="university" className="text-sm font-medium text-primary">University (Optional)</label>
+              <div className="relative">
+                <GraduationCap className="absolute left-3 top-3 h-4 w-4 text-muted" />
+                <input
+                  id="university"
+                  name="university"
+                  type="text"
+                  placeholder="Which university do you attend?"
+                  value={profileData.university}
                   onChange={handleInputChange}
-                  className="hue-input resize-none"
-                  rows={3}
+                  className="w-full pl-10 pr-4 py-3 bg-white/80 rounded-xl border border-white/20 focus:outline-none focus:ring-2 focus:ring-chartPink text-sm"
                 />
               </div>
+            </div>
 
-              <div className="bg-accent-yellow/20 p-4 rounded-xl">
-                <p className="text-sm text-primary">
-                  <strong>Pro tip:</strong> You can always use anonymous mode in chats to express yourself freely!
-                </p>
-              </div>
+            <div className="space-y-2">
+              <label htmlFor="bio" className="text-sm font-medium text-primary">Bio (Optional)</label>
+              <textarea
+                id="bio"
+                name="bio"
+                placeholder="Tell us a bit about yourself..."
+                value={profileData.bio}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3 bg-white/80 rounded-xl border border-white/20 focus:outline-none focus:ring-2 focus:ring-chartPink text-sm resize-none"
+                rows={3}
+              />
+            </div>
 
-              <div className="space-y-3">
-                <HueButton type="submit" className="w-full" disabled={loading}>
-                  {loading ? 'Creating Profile...' : 'Complete Setup'}
-                </HueButton>
-                
-                <HueButton 
-                  type="button" 
-                  variant="outline" 
-                  onClick={handleSkip}
-                  disabled={loading}
-                  className="w-full"
-                >
-                  {loading ? 'Creating Profile...' : 'Skip for Now'}
-                </HueButton>
-                
-                <HueButton 
-                  type="button" 
-                  variant="ghost" 
-                  onClick={() => setStep(1)}
-                  className="w-full"
-                >
-                  Back
-                </HueButton>
-              </div>
-            </form>
-          </HueCardContent>
-        </HueCard>
+            <div className="bg-yellow/20 p-4 rounded-xl">
+              <p className="text-sm text-primary">
+                <strong>Pro tip:</strong> You can always use anonymous mode in chats to express yourself freely!
+              </p>
+            </div>
+
+            <div className="space-y-3">
+              <button 
+                type="submit" 
+                className="w-full bg-primary text-white rounded-xl py-3 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={loading}
+              >
+                {loading ? 'Creating Profile...' : 'Complete Setup'}
+              </button>
+              
+              <button 
+                type="button" 
+                onClick={handleSkip}
+                disabled={loading}
+                className="w-full bg-white/80 text-primary rounded-xl py-3 font-semibold border border-white/20 transition-all duration-200 hover:bg-white disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Creating Profile...' : 'Skip for Now'}
+              </button>
+              
+              <button 
+                type="button" 
+                onClick={() => setStep(1)}
+                className="w-full text-primary hover:text-primary/80 transition-colors"
+              >
+                Back
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

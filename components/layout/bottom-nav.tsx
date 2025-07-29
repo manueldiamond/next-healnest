@@ -26,7 +26,7 @@ export function BottomNav({ activeTab }: BottomNavProps) {
   const tabs = [
     { id: 'home', label: 'Home', icon: Home, path: '/dashboard' },
     { id: 'heal', label: 'Heal', icon: Heart, path: '/heal' },
-    { id: 'focus', label: 'Focus', icon: Focus, path: '/focus' },
+    { id: 'focus', label: 'Focus', icon: Focus, path: '/focus-vault' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
   ] as const;
 

@@ -5,7 +5,8 @@ import { GlobalHeader } from '@/components/layout/global-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
 import { useAuthStore } from '@/lib/store';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, TrendingUp, Heart } from 'lucide-react';
+import { MoreHorizontal, TrendingUp, Heart, LogOut } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -46,7 +47,21 @@ const favoriteNests = [
 export default function ProfilePage() {
   const router = useRouter();
   const userProfile = useAuthStore((state) => state.userProfile);
+  const { setUser, setUserProfile } = useAuthStore();
   const [moodData] = useState(generateMoodData());
+
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      setUser(null);
+      setUserProfile(null as any);
+      router.push('/auth');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   // Mock data
   const xp = 45;
@@ -197,6 +212,15 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={handleLogout}
+          className="w-full bg-red-500 text-white rounded-xl py-3 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center space-x-2"
+        >
+          <LogOut className="w-5 h-5" />
+          <span>Logout</span>
+        </button>
       </div>
 
       <BottomNav />

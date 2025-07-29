@@ -109,12 +109,12 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-sand-gradient pt-16 pb-20">
+    <div className="min-h-screen bg-sand py-20">
       <GlobalHeader 
         title=""
-        showLogo={false}
-        showBackButton={false}
-        showRightButton={true}
+        showLogo
+        showBackButton
+        showRightButton
         onRightClick={() => router.back()}
       />
       

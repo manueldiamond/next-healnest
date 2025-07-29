@@ -114,18 +114,16 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
                 </button>
               </div>
               
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-chartPink rounded-2xl flex items-center justify-center text-2xl">
+              <div className="mb-6">
+                <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4">
                   {nest.avatar}
                 </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-primary">
-                    Welcome to {nest.name}
-                  </h3>
-                  <p className="text-sm text-muted mt-1">
-                    {nest.description}
-                  </p>
-                </div>
+                <h3 className="text-xl font-semibold text-primary mb-2">
+                  {nest.name}
+                </h3>
+                <p className="text-sm text-muted">
+                  {nest.description}
+                </p>
               </div>
               
               <div className="grid grid-cols-2 gap-4 mb-4">
@@ -151,18 +149,16 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
       {/* Nest Profile Section */}
       <div className="px-4 py-6 pt-20">
         <div className="bg-cardBg rounded-2xl p-6 mb-6">
-          <div className="flex items-center space-x-4 mb-4">
-            <div className="w-16 h-16 bg-chartPink rounded-2xl flex items-center justify-center text-2xl">
+          <div className="mb-4">
+            <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4">
               {nest.avatar}
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-primary">
-                Welcome to {nest.name}
-              </h2>
-              <p className="text-sm text-muted mt-1">
-                {nest.description}
-              </p>
-            </div>
+            <h2 className="text-xl font-semibold text-primary mb-2">
+              {nest.name}
+            </h2>
+            <p className="text-sm text-muted">
+              {nest.description}
+            </p>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
@@ -183,8 +179,8 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 px-4 py-4 space-y-4 overflow-y-auto">
+      {/* Chat Messages - Scrollable Area */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start space-x-3">
             <div className="w-8 h-8 bg-chartPink rounded-full flex items-center justify-center">
@@ -207,7 +203,7 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
         ))}
       </div>
 
-      {/* Message Input */}
+      {/* Message Input - Fixed at Bottom */}
       <div className="p-4 bg-cardBg border-t border-white/20">
         <div className="flex items-center space-x-3">
           <button className="w-10 h-10 bg-chartPink/20 rounded-xl flex items-center justify-center transition-all duration-200 hover:bg-chartPink/30">

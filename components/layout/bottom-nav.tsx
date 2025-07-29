@@ -31,7 +31,7 @@ export function BottomNav({ activeTab }: BottomNavProps) {
   ] as const;
 
   return (
-    <div className="fixed border-t-2xl bottom-0 left-0 right-0 z-40 bg-cardBg backdrop-blur-md border-t border-white/20">
+    <div className="fixed rounded-t-2xl bottom-0 left-0 right-0 z-40 bg-cardBg backdrop-blur-md border-t border-white/20">
       <div className="max-w-md mx-auto px-4 py-3">
         <div className="flex items-center justify-around">
           {tabs.map((tab) => {

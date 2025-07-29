@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GlobalHeader } from '@/components/layout/global-header';
 import { Send, Users, MoreHorizontal, Smile, ChevronDown, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -63,8 +63,17 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
   
   const userProfile = useAuthStore((state) => state.userProfile);
   const currentUser = userProfile?.anonymous_name || 'Anonymous User';
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const nest = nestData[params.nestId] || nestData['anxiety'];
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -77,6 +86,7 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
       
       setMessages([...messages, newMessage]);
       setMessage('');
+
     }
   };
 
@@ -147,10 +157,10 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
       )}
       
       {/* Nest Profile Section */}
-      <div className="px-4 py-6 pt-20">
+      <div className="px-4 py-6 pt-20 mx-auto max-w-md">
         <div className="bg-cardBg rounded-2xl p-6 mb-6">
           <div className="mb-4">
-            <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4">
+            <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4 overflow-hidden">
               {nest.avatar}
             </div>
             <h2 className="text-xl font-semibold text-primary mb-2">
@@ -180,7 +190,7 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
       </div>
 
       {/* Chat Messages - Scrollable Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 pb-4">
+      <div className="flex-1 max-w-md w-full flex-1 mx-auto overflow-y-auto px-4 py-4 space-y-4 mt- pb-40">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start space-x-3">
             <div className="w-8 h-8 bg-chartPink rounded-full flex items-center justify-center overflow-hidden">
@@ -209,11 +219,13 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
             </div>
           </div>
         ))}
+        {/* Invisible div for scrolling to bottom */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input - Fixed at Bottom */}
-      <div className="p-4 bg-cardBg border-t border-white/20">
-        <div className="flex items-center space-x-3">
+      <div className="p-4 bg-cardBg rounded-t-2xl border-t fixed bottom-0 left-0 w-full border-white/20">
+        <div className="flex items-center max-w-md mx-auto space-x-3">
           <button className="w-10 h-10 bg-chartPink/20 rounded-xl flex items-center justify-center transition-all duration-200 hover:bg-chartPink/30">
             <Smile className="w-5 h-5 text-chartPink" />
           </button>

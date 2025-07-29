@@ -16,12 +16,14 @@ export default function TherapyVaultPage() {
       title: 'Counselling',
       description: 'Professional therapy sessions and guidance',
       icon: MessageCircle,
+      onClick: () => router.push('/therapy-vault/counselling'),
     },
     {
       id: 'guided-exercises',
       title: 'Guided Exercises',
       description: 'Mindfulness and relaxation techniques',
       icon: Play,
+      onClick: () => router.push('/therapy-vault/guided-exercises'),
     },
     {
       id: 'calming-music',
@@ -67,7 +69,7 @@ export default function TherapyVaultPage() {
             return (
               <button
                 key={option.id}
-                onClick={option.onClick || (() => {})} // No navigation for now
+                onClick={option.onClick || (() => {})}
                 className="w-full bg-cardBg rounded-2xl p-4 flex items-center space-x-4 transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">

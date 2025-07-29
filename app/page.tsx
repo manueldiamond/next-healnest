@@ -48,7 +48,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-accent-pink/20 via-white to-accent-yellow/20 relative overflow-hidden">
+    <div className="min-h-screen bg-sand relative overflow-hidden">
       {/* Floating Emojis Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-10 text-4xl animate-bounce">💖</div>
@@ -62,18 +62,23 @@ export default function LandingPage() {
         <section className="flex-1 flex items-center justify-center px-4 py-16">
           <div className="max-w-2xl w-full text-center space-y-12">
             {/* Logo */}
-            <div className="inline-flex items-center justify-center w-32 h-32 rounded-3xl bg-gradient-to-br from-accent-pink/30 via-accent-yellow/20 to-accent-blue/30 backdrop-blur-md shadow-aura-glow border border-white/20 animate-pulse p-1">
-              <div className="w-full h-full rounded-3xl bg-glass-gradient backdrop-blur-md flex items-center justify-center">
-                <img src="/logo.png" alt="HealNest Logo" className="w-16 h-16 object-contain" />
-              </div>
+            <div className="inline-flex items-center justify-center w-32 h-32 rounded-2xl bg-chartPink shadow-lg animate-pulse">
+              <img 
+                src="/logo.png" 
+                alt="HealNest Logo" 
+                className="w-16 h-16 object-contain"
+                style={{
+                  filter: 'invert(34%) sepia(10%) saturate(1012%) hue-rotate(110deg) brightness(90%) contrast(90%)',
+                }}
+              />
             </div>
             
             {/* Heading */}
             <div className="space-y-6">
-              <h1 className="text-6xl font-heading font-bold bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent leading-tight">
+              <h1 className="text-6xl font-heading font-bold text-primary leading-tight">
                 HealNest – A Safe Space to Feel Seen
               </h1>
-              <p className="text-xl font-body text-muted-foreground max-w-lg mx-auto">
+              <p className="text-xl font-body text-muted max-w-lg mx-auto">
                 Built for Gen Z, by Gen Z. Safe. Wholesome. Real.
               </p>
             </div>
@@ -81,34 +86,34 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link href="/auth" className="block">
-                <HueButton size="lg" className="w-full sm:w-auto bg-gradient-to-r from-accent-pink to-accent-yellow hover:shadow-aura-glow transition-all duration-300 text-white font-semibold">
+                <button className="w-full sm:w-auto bg-primary text-white rounded-xl py-4 px-8 font-semibold transition-all duration-200 hover:scale-105 active:scale-95">
                   Join a Nest 💖
-                </HueButton>
+                </button>
               </Link>
               <Link href="/auth" className="block">
-                <HueButton variant="outline" size="lg" className="w-full sm:w-auto backdrop-blur-md bg-white/20 border-white/30 hover:bg-white/30">
+                <button className="w-full sm:w-auto bg-white/80 text-primary rounded-xl py-4 px-8 font-semibold border border-white/20 transition-all duration-200 hover:bg-white">
                   Find your Space ✨
-                </HueButton>
+                </button>
               </Link>
             </div>
           </div>
         </section>
 
         {/* Features Section */}
-        <section className="px-4 py-20 backdrop-blur-md bg-white/10 border-t border-white/20">
+        <section className="px-4 py-20 bg-cardBg/50 border-t border-white/20">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-4xl font-heading font-bold text-center bg-gradient-to-r from-accent-dark to-accent-pink bg-clip-text text-transparent mb-16">
+            <h2 className="text-4xl font-heading font-bold text-center text-primary mb-16">
               Why Choose HealNest? ✨
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {features.map((feature, index) => (
-                <div key={index} className="text-center space-y-6 p-8 rounded-3xl bg-glass-gradient backdrop-blur-md border border-white/20 hover:shadow-aura-glow transition-all duration-300">
-                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-r from-accent-pink to-accent-yellow shadow-lg">
+                <div key={index} className="text-center space-y-6 p-8 rounded-2xl bg-cardBg shadow-lg border border-white/20 hover:scale-105 transition-all duration-300">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-chartPink shadow-lg">
                     {feature.icon}
                   </div>
                   <h3 className="text-2xl font-heading font-semibold text-primary">{feature.title}</h3>
-                  <p className="text-body text-muted-foreground text-lg leading-relaxed">{feature.description}</p>
+                  <p className="text-body text-muted text-lg leading-relaxed">{feature.description}</p>
                 </div>
               ))}
             </div>
@@ -116,9 +121,9 @@ export default function LandingPage() {
         </section>
 
         {/* Footer */}
-        <footer className="px-4 py-8 backdrop-blur-md bg-white/10 border-t border-white/20">
+        <footer className="px-4 py-8 bg-cardBg/50 border-t border-white/20">
           <div className="max-w-md mx-auto text-center">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted">
               Made with 💜 for university students everywhere
             </p>
           </div>

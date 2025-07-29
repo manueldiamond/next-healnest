@@ -76,7 +76,7 @@ export default function AuthPage() {
 
         if (data.user) {
           setUser(data.user);
-          router.push('/chats');
+          router.push('/welcome');
         }
       } else {
         const { data, error } = await supabase.auth.signUp({

@@ -1,6 +1,8 @@
 "use client"
 
 import { useAuthStore } from "@/lib/store";
+import { usePathname, useRouter } from "next/navigation";
+import path from "node:path";
 import { useEffect } from "react";
 
 export default function NewLayout({
@@ -8,11 +10,21 @@ export default function NewLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const loadProfile = useAuthStore(s=>s.loadUserProfile)
+  const loadProfile = useAuthStore(s => s.loadUserProfile);
+
+  const path = usePathname()
+  const router = useRouter()
   useEffect(() => {
-    loadProfile();
+  (async () => {
+    const result = await loadProfile();
+    if (!result) {
+      router.replace("/auth");
+    }
+    // else: do nothing, proceed
+  })();
+
   }, [loadProfile]);
-  return (
+ return (
     <div className="min-h-screen ">
       {children}
     </div>

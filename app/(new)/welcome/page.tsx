@@ -54,8 +54,8 @@ export default function NewHomePage() {
       }
 
       console.log('Mood saved successfully:', data);
-      // Navigate to the main app or dashboard
-      router.push('/app');
+      // Navigate to the dashboard
+      router.push('/dashboard');
     } catch (error) {
       console.error('Error saving mood:', error);
     } finally {
@@ -125,9 +125,10 @@ export default function NewHomePage() {
       <Button
         onClick={handleProceed}
         disabled={!selectedMood || isLoading}
+        size={'lg'}
         className="w-full  max-w-md mx-auto  mt-auto bg-primary text-white hover:bg-primary/90 rounded-2xl py-6 text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {isLoading ? 'Saving...' : 'Proceed'}
+        {isLoading ? 'Saving...' : 'Continued to HealNest'}
       </Button>
 
       {/* Modal for mood details */}
@@ -154,6 +155,7 @@ export default function NewHomePage() {
                 Cancel
               </Button>
               <Button
+              
                 onClick={() => setIsModalOpen(false)}
                 className="flex-1 bg-primary text-white hover:bg-primary/90 rounded-xl"
               >

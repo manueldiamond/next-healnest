@@ -27,6 +27,14 @@ const config: Config = {
         orange: '#E29A6E',
         graph: '#B1C3C6',
         muted: '#697C86',
+
+        cardBg: '#FFF9F0', // Warm cream that POPs against cool azure
+        // Chart colors - pastel pinks and corals that POP!
+        chartPink: '#FF8BA7', // Softer pastel pink
+        chartRed: '#FF6B8A', // Pastel coral red
+        chartCoral: '#FF9A8B', // Warm pastel coral
+        chartRose: '#FF7EB3', // Soft pastel rose
+        chartMagenta: '#FF6B9D', // Vibrant but pastel magenta
         // Existing shadcn colors
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',

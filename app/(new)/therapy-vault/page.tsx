@@ -1,11 +1,14 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import { GlobalHeader } from '@/components/layout/global-header';
 import { useRouter } from 'next/navigation';
 import { MessageCircle, Play, Music, Bot } from 'lucide-react';
+import { NowPlaying } from '@/components/ui/now-playing';
 
 export default function TherapyVaultPage() {
   const router = useRouter();
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [showNowPlaying, setShowNowPlaying] = useState(false);
   
   const therapyOptions = [
     {
@@ -25,6 +28,10 @@ export default function TherapyVaultPage() {
       title: 'Calming Music',
       description: 'Soothing sounds for stress relief',
       icon: Music,
+      onClick: () => {
+        setIsMusicPlaying(!isMusicPlaying);
+        setShowNowPlaying(true);
+      },
     },
     {
       id: 'ai-support',
@@ -33,6 +40,15 @@ export default function TherapyVaultPage() {
       icon: Bot,
     },
   ];
+
+  const handleMusicToggle = () => {
+    setIsMusicPlaying(!isMusicPlaying);
+  };
+
+  const handleCloseMusic = () => {
+    setIsMusicPlaying(false);
+    setShowNowPlaying(false);
+  };
 
   return (
     <div className="min-h-screen bg-sand py-20">
@@ -51,7 +67,7 @@ export default function TherapyVaultPage() {
             return (
               <button
                 key={option.id}
-                onClick={() => {}} // No navigation for now
+                onClick={option.onClick || (() => {})} // No navigation for now
                 className="w-full bg-cardBg rounded-2xl p-4 flex items-center space-x-4 transition-all duration-200 hover:scale-105 active:scale-95"
               >
                 <div className="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
@@ -70,6 +86,17 @@ export default function TherapyVaultPage() {
           })}
         </div>
       </div>
+
+      {/* Now Playing Component */}
+      {showNowPlaying && (
+        <NowPlaying
+          isPlaying={isMusicPlaying}
+          onToggle={handleMusicToggle}
+          onClose={handleCloseMusic}
+          title="Calming Therapy"
+          artist="Relaxation Sounds"
+        />
+      )}
     </div>
   );
 } 

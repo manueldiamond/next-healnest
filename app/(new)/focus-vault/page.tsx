@@ -3,12 +3,15 @@ import React, { useState, useEffect } from 'react';
 import { GlobalHeader } from '@/components/layout/global-header';
 import { useRouter } from 'next/navigation';
 import { Play, Music, Users, Pause } from 'lucide-react';
+import { NowPlaying } from '@/components/ui/now-playing';
 
 export default function FocusVaultPage() {
   const router = useRouter();
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30 * 60); // 30 minutes in seconds
   const [originalTime] = useState(30 * 60); // Store original time for reset
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+  const [showNowPlaying, setShowNowPlaying] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -43,6 +46,16 @@ export default function FocusVaultPage() {
   const handleResetTimer = () => {
     setIsTimerRunning(false);
     setTimeLeft(originalTime);
+  };
+
+  const handleMusicToggle = () => {
+    setIsMusicPlaying(!isMusicPlaying);
+    setShowNowPlaying(true);
+  };
+
+  const handleCloseMusic = () => {
+    setIsMusicPlaying(false);
+    setShowNowPlaying(false);
   };
 
   const formatTime = (seconds: number) => {
@@ -111,7 +124,10 @@ export default function FocusVaultPage() {
         {/* Focus Cards */}
         <div className="flex space-x-4">
           {/* Calming Music */}
-          <button className="flex-1 bg-cardBg rounded-2xl p-4 flex flex-col items-center space-y-2 transition-all duration-200 hover:scale-105 active:scale-95">
+          <button 
+            onClick={handleMusicToggle}
+            className="flex-1 bg-cardBg rounded-2xl p-4 flex flex-col items-center space-y-2 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
             <div className="w-12 h-12 bg-chartPink rounded-xl flex items-center justify-center">
               <Music className="w-6 h-6 text-cardBg" />
             </div>
@@ -130,6 +146,17 @@ export default function FocusVaultPage() {
           </div>
         </div>
       </div>
+
+      {/* Now Playing Component */}
+      {showNowPlaying && (
+        <NowPlaying
+          isPlaying={isMusicPlaying}
+          onToggle={handleMusicToggle}
+          onClose={handleCloseMusic}
+          title="Lo-Fi Focus"
+          artist="Study Beats"
+        />
+      )}
     </div>
   );
 } 

@@ -19,12 +19,13 @@ export function generateAnonymousName(): string {
 }
 
 export function calculateAuraLevel(points: number): number {
-  if (points < 50) return 1;
-  if (points < 200) return 2;
-  if (points < 500) return 3;
-  if (points < 1000) return 4;
-  if (points < 2000) return 5;
-  return Math.floor(points / 1000) + 5;
+  // Reduced requirements by 8x
+  if (points < 6) return 1;
+  if (points < 25) return 2;
+  if (points < 62) return 3;
+  if (points < 125) return 4;
+  if (points < 250) return 5;
+  return Math.floor(points / 125) + 5;
 }
 
 export function getAuraLevelName(level: number): string {

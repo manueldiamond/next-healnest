@@ -80,8 +80,12 @@ export default function ProfilePage() {
   const getProgressToNextLevel = () => {
     if (!userProfile) return 0;
     const currentLevel = userProfile.aura_level;
-    const pointsForCurrentLevel = currentLevel === 1 ? 0 : (currentLevel - 1) * 250;
-    const pointsForNextLevel = currentLevel * 250;
+    
+    // Updated aura requirements (reduced by 8x)
+    const levelThresholds = [0, 6, 25, 62, 125, 250];
+    const pointsForCurrentLevel = levelThresholds[currentLevel - 1] || 0;
+    const pointsForNextLevel = levelThresholds[currentLevel] || (currentLevel * 125);
+    
     const progress = ((userProfile.aura_points - pointsForCurrentLevel) / (pointsForNextLevel - pointsForCurrentLevel)) * 100;
     return Math.max(0, Math.min(100, progress));
   };

@@ -20,7 +20,12 @@ export function Navbar() {
     setUserProfile(null);
   };
 
-  if (!user || pathname === '/' || pathname === '/auth' || pathname === '/onboarding') {
+  // Hide navbar on landing, auth, onboarding, and chat routes
+  if (!user || 
+      pathname === '/' || 
+      pathname === '/auth' || 
+      pathname === '/onboarding' ||
+      pathname.includes('/nest/') && pathname.includes('/chat')) {
     return null;
   }
 

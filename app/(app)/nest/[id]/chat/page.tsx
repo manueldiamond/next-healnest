@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, EyeOff, Eye, MoreVertical, Users } from 'lucide-react';
+import { ArrowLeft, Send, Reply, ThumbsUp, ThumbsDown, Users, Eye, EyeOff, MoreVertical } from 'lucide-react';
 import { HueButton } from '@/components/ui/hue-button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuthStore } from '@/lib/store';
-import { Database, supabase } from '@/lib/supabase';
-import { generateAnonymousName } from '@/lib/utils/anonymous-names';
+import { supabase } from '@/lib/supabase';
+import { generateAnonymousName, calculateAuraLevel } from '@/lib/utils/anonymous-names';
 import { io, Socket } from 'socket.io-client';
 
 interface Message {
@@ -349,12 +349,42 @@ export default function NestChatPage() {
         .eq('user_id', user.id)
         .single();
 
+      // Get the message to find the author
+      const { data: messageData } = await supabase
+        .from('messages')
+        .select('user_id')
+        .eq('id', messageId)
+        .single();
+
+      if (!messageData) return;
+
+      const messageAuthorId = messageData.user_id;
+      const isModeratorOrAdmin = userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin';
+      
+      // Define aura point values
+      const auraValues = {
+        normal: {
+          upvote: 1,
+          downvote: -1
+        },
+        moderator: {
+          upvote: 5,
+          downvote: -5
+        }
+      };
+
+      let auraChange = 0;
+
       if (existingReaction) {
-        // Remove existing reaction
+        // Remove existing reaction - reverse the aura change
         await supabase
           .from('message_reactions')
           .delete()
           .eq('id', existingReaction.id);
+
+        // Reverse the aura change
+        const values = isModeratorOrAdmin ? auraValues.moderator : auraValues.normal;
+        auraChange = existingReaction.reaction_type === 'upvote' ? -values.upvote : -values.downvote;
       } else {
         // Add new reaction
         await supabase
@@ -364,6 +394,32 @@ export default function NestChatPage() {
             user_id: user.id,
             reaction_type: type,
           });
+
+        // Apply aura change
+        const values = isModeratorOrAdmin ? auraValues.moderator : auraValues.normal;
+        auraChange = type === 'upvote' ? values.upvote : values.downvote;
+      }
+
+      // Update the message author's aura points
+      if (auraChange !== 0 && messageAuthorId !== user.id) {
+        const { data: authorData } = await supabase
+          .from('users')
+          .select('aura_points')
+          .eq('id', messageAuthorId)
+          .single();
+
+        if (authorData) {
+          const newAuraPoints = Math.max(0, authorData.aura_points + auraChange);
+          const newAuraLevel = calculateAuraLevel(newAuraPoints);
+
+          await supabase
+            .from('users')
+            .update({
+              aura_points: newAuraPoints,
+              aura_level: newAuraLevel
+            })
+            .eq('id', messageAuthorId);
+        }
       }
 
       // Update message reaction counts
@@ -407,9 +463,9 @@ export default function NestChatPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto flex flex-col w-full h-full bg-gradient-to-b from-accent-pink/10 via-white to-accent-yellow/10">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 backdrop-blur-md bg-glass-gradient border-b border-white/20 shadow-aura-glow">
+    <div className="max-w-md mx-auto flex flex-col w-full h-screen bg-gradient-to-b from-accent-pink/10 via-white to-accent-yellow/10">
+      {/* Header - Fixed */}
+      <div className="flex items-center justify-between p-4 backdrop-blur-md bg-glass-gradient border-b border-white/20 shadow-aura-glow flex-shrink-0">
         <div className="flex items-center space-x-3">
           <HueButton variant="ghost" size="icon" onClick={() => router.back()} className="backdrop-blur-md bg-white/20 hover:bg-white/30">
             <ArrowLeft className="w-5 h-5" />
@@ -453,8 +509,8 @@ export default function NestChatPage() {
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      {/* Messages - Scrollable */}
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
         {messages.map((message,index) => (
           <div key={message.id} className="space-y-2">
             {/* Reply Reference */}
@@ -480,30 +536,30 @@ export default function NestChatPage() {
                 <p className="text-sm">{message.content}</p>
                 
                 {/* Actions */}
-                                  <div className="flex items-center justify-between text-xs">
-                    <span className={message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'}>
-                      {formatTime(message.created_at)}
-                    </span>
+                <div className="flex items-center justify-between text-xs">
+                  <span className={message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'}>
+                    {formatTime(message.created_at)}
+                  </span>
+                  
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setReplyingTo(message)}
+                      className={`hover:scale-110 transition-transform ${
+                        message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
+                      }`}
+                    >
+                      <Reply className="w-3 h-3" />
+                    </button>
                     
-                    <div className="flex items-center space-x-2">
+                    {/* Moderator Actions */}
+                    {(userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin') && (
+                      <MessageActions message={message} onDelete={fetchMessages} />
+                    )}
+                    
+                    {/* Reactions  */}
+                    <div className="flex items-center space-x-1">
                       <button
-                        onClick={() => setReplyingTo(message)}
-                        className={`hover:scale-110 transition-transform ${
-                          message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
-                        }`}
-                      >
-                        <Reply className="w-3 h-3" />
-                      </button>
-                      
-                      {/* Moderator Actions */}
-                      {(userProfile?.role === 'moderator' || userProfile?.role === 'admin' || userProfile?.role === 'super_admin') && (
-                        <MessageActions message={message} onDelete={fetchMessages} />
-                      )}
-                      
-                      {/* Reactions  */}
-                      <div className="flex items-center space-x-1">
-                        <button
-                          onClick={() => handleReaction(message.id, 'upvote')}
+                        onClick={() => handleReaction(message.id, 'upvote')}
                         className={`hover:scale-110 transition-transform ${
                           message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
                         }`}
@@ -515,6 +571,20 @@ export default function NestChatPage() {
                       }`}>
                         {message.upvotes}
                       </span>
+                      
+                      <button
+                        onClick={() => handleReaction(message.id, 'downvote')}
+                        className={`hover:scale-110 transition-transform ${
+                          message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
+                        }`}
+                      >
+                        <ThumbsDown className="w-3 h-3" />
+                      </button>
+                      <span className={`text-xs ${
+                        message.user_id === user?.id ? 'text-white/70' : 'text-muted-foreground'
+                      }`}>
+                        {message.downvotes}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -525,9 +595,9 @@ export default function NestChatPage() {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Reply Bar */}
+      {/* Reply Bar - Fixed */}
       {replyingTo && (
-        <div className="px-4 py-3 backdrop-blur-md bg-glass-gradient border-t border-white/20">
+        <div className="px-4 py-3 backdrop-blur-md bg-glass-gradient border-t border-white/20 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex-1">
               <p className="text-xs text-muted-foreground">Replying to message</p>
@@ -540,8 +610,8 @@ export default function NestChatPage() {
         </div>
       )}
 
-      {/* Input */}
-      <form onSubmit={sendMessage} className="p-4 backdrop-blur-md bg-glass-gradient border-t border-white/20 shadow-aura-glow">
+      {/* Input - Fixed */}
+      <form onSubmit={sendMessage} className="p-4 backdrop-blur-md bg-glass-gradient border-t border-white/20 shadow-aura-glow flex-shrink-0">
         <div className="flex items-center space-x-2">
           <div className="flex-1 relative">
             <Input

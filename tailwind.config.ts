@@ -16,28 +16,17 @@ const config: Config = {
         'body': ['var(--font-quicksand)', 'sans-serif'],
       },
       colors: {
-        // HealNest Custom Colors
-        primary: {
-          DEFAULT: '#080334',
-          50: '#f0f0ff',
-          100: '#e0e0ff',
-          200: '#c7c7ff',
-          300: '#a5a5ff',
-          400: '#8080ff',
-          500: '#5c5cff',
-          600: '#4747ff',
-          700: '#3333ff',
-          800: '#2424cc',
-          900: '#080334',
-          foreground: '#ffffff',
-        },
-        accent: {
-          pink: '#FFE2F1',
-          blue: '#A5C8E4',
-          yellow: '#F9F0C1',
-          dark: '#080334',
-          foreground: '#080334',
-        },
+        bg: '#F0EBDF',
+        sand:'#fbf3e6',
+        surface: '#FFFFFF',
+        azure: '#D9E3E4',
+        primary: '#4F7972',
+        green: '#8AA194',
+        pink: '#F5CED8',
+        yellow: '#E8D9BD',
+        orange: '#E29A6E',
+        graph: '#B1C3C6',
+        muted: '#697C86',
         // Existing shadcn colors
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -53,7 +42,7 @@ const config: Config = {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
         },
-        muted: {
+        mutedShadcn: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
         },
@@ -76,6 +65,8 @@ const config: Config = {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        'xl': '1.25rem',
+        '2xl': '2rem',
       },
       keyframes: {
         'accordion-down': {
@@ -115,6 +106,7 @@ const config: Config = {
         'hue-gradient': 'linear-gradient(145deg, #FFE2F1, #F9F0C1)',
         'glass-gradient': 'linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))',
         'aura-glow': '0 0 20px rgba(255, 226, 241, 0.3)',
+        'bg-sand-gradient': 'linear-gradient(0deg, #F0EBDF, #fbf3e6)',
       },
     },
   },

@@ -43,7 +43,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-gradient-to-br from-white via-accent-blue/5 to-accent-yellow/10 text-foreground font-medium;
+    @apply bg-gradient-to-br from-white via-azure/5 to-yellow/10 text-foreground font-medium;
   }
 }
 
@@ -57,6 +57,6 @@
   }
   
   .hue-input {
-    @apply bg-white/50 border border-white/30 rounded-xl px-4 py-3 focus:bg-white/80 focus:border-accent-blue transition-all duration-200;
+    @apply bg-white/50 border border-white/30 rounded-xl px-4 py-3 focus:bg-white/80 focus:border-azure transition-all duration-200;
   }
 }

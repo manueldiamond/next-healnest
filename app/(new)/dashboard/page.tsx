@@ -38,7 +38,6 @@ const generateMoodData = () => {
 const chartColor = '#FF8BA7'; // chartPink - soft pastel pink
 
 export default function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<'home' | 'heal' | 'focus' | 'grow' | 'profile'>('home');
   const [moodData] = useState(generateMoodData());
   const router = useRouter();
 
@@ -142,7 +141,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNav />
     </div>
   );
 } 

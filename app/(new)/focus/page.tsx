@@ -3,33 +3,33 @@
 import React from 'react';
 import { GlobalHeader } from '@/components/layout/global-header';
 import { BottomNav } from '@/components/layout/bottom-nav';
-import { Focus, DollarSign } from 'lucide-react';
+import { Focus, Timer, Target } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-export default function GrowPage() {
+export default function FocusPage() {
   const router = useRouter();
 
-  const growOptions = [
+  const focusOptions = [
     {
       id: 'focus-vault',
       title: 'Focus Vault',
       description: 'Productivity and focus tools',
-      icon: Focus,
+      icon: Target,
       onClick: () => router.push('/focus-vault'),
     },
     {
-      id: 'money-vault',
-      title: 'Money Vault',
-      description: 'Financial wellness resources',
-      icon: DollarSign,
-      onClick: () => router.push('/money-vault'),
+      id: 'timer',
+      title: 'Focus Timer',
+      description: 'Pomodoro and time management',
+      icon: Timer,
+      onClick: () => router.push('/timer'),
     },
   ];
 
   return (
     <div className="min-h-screen bg-azure pt-16 pb-20">
       <GlobalHeader 
-        title="Grow"
+        title="Focus"
         showLogo={false}
         showBackButton={true}
         showRightButton={false}
@@ -38,7 +38,7 @@ export default function GrowPage() {
       
       <div className="max-w-md mx-auto px-4 space-y-6">
         <div className="space-y-4">
-          {growOptions.map((option) => {
+          {focusOptions.map((option) => {
             const Icon = option.icon;
             
             return (

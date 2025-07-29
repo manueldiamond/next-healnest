@@ -115,7 +115,7 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
               </div>
               
               <div className="mb-6">
-                <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4">
+                <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl mb-4 overflow-hidden">
                   {nest.avatar}
                 </div>
                 <h3 className="text-xl font-semibold text-primary mb-2">
@@ -180,11 +180,19 @@ export default function ChatPage({ params }: { params: { nestId: string } }) {
       </div>
 
       {/* Chat Messages - Scrollable Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4 pb-4">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start space-x-3">
-            <div className="w-8 h-8 bg-chartPink rounded-full flex items-center justify-center">
-              <Users className="w-4 h-4 text-cardBg" />
+            <div className="w-8 h-8 bg-chartPink rounded-full flex items-center justify-center overflow-hidden">
+              {msg.user === currentUser && userProfile?.avatar_url ? (
+                <img 
+                  src={userProfile.avatar_url} 
+                  alt="User Avatar" 
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Users className="w-4 h-4 text-cardBg" />
+              )}
             </div>
             <div className="flex-1 bg-cardBg rounded-xl p-3">
               <div className="flex items-center space-x-2 mb-1">

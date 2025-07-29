@@ -124,7 +124,7 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-sand py-20">
+    <div className="min-h-screen bg-sand py-20 pb-30">
       <GlobalHeader 
         title=""
         showLogo
@@ -136,8 +136,16 @@ export default function ProfilePage() {
       <div className="max-w-md mx-auto px-4 space-y-6">
         {/* Profile Header */}
         <div className="flex items-center space-x-4">
-          <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center text-3xl">
-            👤
+          <div className="w-20 h-20 bg-chartPink rounded-2xl flex items-center justify-center overflow-hidden">
+            {userProfile?.avatar_url ? (
+              <img 
+                src={userProfile.avatar_url} 
+                alt="Profile Avatar" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-3xl">👤</span>
+            )}
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-primary">
@@ -216,7 +224,7 @@ export default function ProfilePage() {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full bg-red-500 text-white rounded-xl py-3 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center space-x-2"
+          className="mb-5 w-full bg-red-500 text-white rounded-xl py-3 font-semibold transition-all duration-200 hover:scale-105 active:scale-95 flex items-center justify-center space-x-2"
         >
           <LogOut className="w-5 h-5" />
           <span>Logout</span>

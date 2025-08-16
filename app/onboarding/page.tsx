@@ -57,7 +57,7 @@ export default function OnboardingPage() {
       if (error) throw error;
 
       setUserProfile(data);
-      router.push('/chats');
+      router.push('/welcome');
     } catch (error: any) {
       console.error('Profile creation error:', error);
       alert(error?.message);

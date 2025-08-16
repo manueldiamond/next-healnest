@@ -55,7 +55,7 @@ export default function AuthPage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         setUser(user);
-        router.push('/chats');
+        router.push('/welcome');
       }
     };
     checkUser();
